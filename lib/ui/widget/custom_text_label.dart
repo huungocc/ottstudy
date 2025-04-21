@@ -19,6 +19,7 @@ class CustomTextLabel extends StatelessWidget {
   final bool isFormatPriceWithDecimal;
   final String? fontFamily;
   final bool isRequired;
+  final LinearGradient? gradient;
 
   const CustomTextLabel(this.title,
       {Key? key,
@@ -34,7 +35,7 @@ class CustomTextLabel extends StatelessWidget {
         this.fontFamily,
         this.formatCurrency = false,
         this.isFormatPriceWithDecimal = false,
-        this.isRequired = false})
+        this.isRequired = false, this.gradient})
       : super(key: key);
 
   @override
@@ -66,32 +67,41 @@ class CustomTextLabel extends StatelessWidget {
     return renderContent();
   }
 
-  renderContent() {
-    return Text(
-      (formatCurrency
-          ? Common.formatPrice(title ?? "", isFormatPriceWithDecimal: isFormatPriceWithDecimal)
-          : title?.toString() ?? "")
-          .trim(),
+  Widget renderContent() {
+    final textWidget = Text(
+      title?.toString() ?? "",
       textAlign: textAlign,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines,
       style: TextStyle(
-          height: fontHeight ?? 22.27 / 19,
-          fontSize: fontSize ?? 14,
-          fontWeight: fontWeight,
-          fontStyle: fontStyle,
-          decoration: decoration,
-          decorationColor: decorationColor,
-          color: color),
+        height: fontHeight ?? 22.27 / 19,
+        fontSize: fontSize ?? 14,
+        fontWeight: fontWeight,
+        fontStyle: fontStyle,
+        decoration: decoration,
+        decorationColor: decorationColor,
+        foreground: gradient != null
+            ? (Paint()..shader = gradient!.createShader(Rect.fromLTWH(0, 0, 200, 30)))
+            : null,
+        color: gradient == null ? color : null,
+      )
     );
+
+    return gradient != null
+        ? ShaderMask(
+      shaderCallback: (bounds) => gradient!.createShader(bounds),
+      child: textWidget,
+    )
+        : textWidget;
   }
 
-  static renderBaseTitle({String? title, FontWeight? fontWeight, bool isRequired = false, Color? titleColor}) {
+  static renderBaseTitle({String? title, FontWeight? fontWeight, bool isRequired = false, Color? titleColor, LinearGradient? gradient}) {
     return Container(
       padding: EdgeInsets.only(bottom: 5),
       child: CustomTextLabel(
         title,
-        color: titleColor ?? AppColors.black,
+        color: titleColor ?? Colors.black,
+        gradient: gradient,
         fontSize: 14,
         isRequired: isRequired,
         fontWeight: fontWeight ?? FontWeight.w600,

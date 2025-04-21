@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,7 @@ import 'custom_text_label.dart';
 typedef CustomTextFieldValidator<T> = String? Function(String value);
 
 class CustomTextInput extends StatefulWidget {
-  final onSubmitted;
+  final ValueChanged<String>? onSubmitted;
   final TextInputType keyboardType;
   final String title;
   final TextStyle? titleStyle;
@@ -19,8 +20,7 @@ class CustomTextInput extends StatefulWidget {
   final TextInputAction? textInputAction;
   final Function? getTextFieldValue;
   final int minLines;
-  final bool? obscureText;
-  final Function? changeFocus;
+  final bool obscureText;
   final String hintText;
   final EdgeInsets? margin;
   final EdgeInsets? padding;
@@ -35,71 +35,98 @@ class CustomTextInput extends StatefulWidget {
   final bool enabled;
   final Color colorBgTextField;
   final Color colorBgTextFieldDisable;
-  final hideUnderline;
-  final formatNumber;
+  final bool formatNumber;
   final Color colorText;
   final int maxLength;
   final bool formatPercent;
   final bool formatDecimal;
-  final bool enableBorder;
   final Widget? suffixIcon;
+  final double? suffixIconMargin;
   final Widget? prefixIcon;
   final bool isPasswordTF;
   final bool isDateTimeTF;
+  final bool isDropdownTF;
   final bool isRequired;
-  final bool isElevation;
   final bool formatCurrency;
   final CustomTextFieldValidator? validator;
   final Function? onTapTextField;
+  final VoidCallback? onTapSuffixIcon;
   final bool autoFocus;
+  final TextStyle? hintStyle;
+  final Function()? onTap;
+  final bool enableErrorSuffix;
+  final bool clearButton;
+  final InputBorder? disabledBorder;
+  final InputBorder? focusedBorder;
+  final InputBorder? enabledBorder;
+  final String hintUnderText;
+  final FocusNode? focusNode;
+  final int? millisecondsDebounce;
+  final bool autoCheckValidate;
   final DateTime? firstDate;
   final DateTime? lastDate;
+  final List<DropdownItem>? dropdownItems;
+  final Function(DropdownItem?)? onDropdownChanged;
+  final DropdownItem? selectedDropdownItem;
 
-  CustomTextInput(
-      {Key? key,
-      this.getTextFieldValue,
-      this.onSubmitted,
-      this.keyboardType = TextInputType.text,
-      this.title = "",
-      this.maxLines = 1,
-      this.textInputAction,
-      this.minLines = 1,
-      this.obscureText,
-      this.changeFocus,
-      this.hintText = "",
-      this.margin,
-      this.padding,
-      this.initData,
-      this.titleStyle,
-      this.width,
-      this.heightTextInput,
-      this.textController,
-      this.fontWeight,
-      this.align,
-      this.enabled = true,
-      this.hideUnderline = false,
-      this.colorText = Colors.black,
-      this.maxLength = TextField.noMaxLength,
-      this.formatPercent = false,
-      this.formatDecimal = false,
-      this.enableBorder = false,
-      this.suffixIcon,
-      this.prefixIcon,
-      this.isPasswordTF = false,
-      this.isDateTimeTF = false,
-      this.isRequired = false,
-      this.isElevation = false,
-      this.colorBgTextField = AppColors.white,
-      this.colorBgTextFieldDisable = AppColors.base_color,
-      this.formatCurrency = false,
-      this.formatNumber = false,
-      this.validator,
-      this.onTapTextField,
-      this.autoFocus = false,
-      this.firstDate,
-      this.fontSize,
-      this.lastDate})
-      : super(key: key);
+  CustomTextInput({
+    Key? key,
+    this.getTextFieldValue,
+    this.onSubmitted,
+    this.keyboardType = TextInputType.text,
+    this.title = "",
+    this.maxLines = 1,
+    this.textInputAction,
+    this.minLines = 1,
+    this.obscureText = false,
+    this.hintText = "",
+    this.margin,
+    this.padding,
+    this.initData,
+    this.titleStyle,
+    this.width,
+    this.heightTextInput,
+    this.textController,
+    this.fontWeight,
+    this.align,
+    this.enabled = true,
+    this.colorText = Colors.black,
+    this.maxLength = TextField.noMaxLength,
+    this.formatPercent = false,
+    this.formatDecimal = false,
+    this.suffixIcon,
+    this.suffixIconMargin,
+    this.prefixIcon,
+    this.isPasswordTF = false,
+    this.isDateTimeTF = false,
+    this.isDropdownTF = false,
+    this.isRequired = false,
+    this.colorBgTextField = AppColors.white,
+    this.colorBgTextFieldDisable = AppColors.disable,
+    this.formatCurrency = false,
+    this.formatNumber = false,
+    this.validator,
+    this.onTapTextField,
+    this.onTapSuffixIcon,
+    this.autoFocus = false,
+    this.fontSize,
+    this.hintStyle,
+    this.onTap,
+    this.enableErrorSuffix = true,
+    this.clearButton = false,
+    this.disabledBorder,
+    this.focusedBorder,
+    this.enabledBorder,
+    this.hintUnderText = "",
+    this.focusNode,
+    this.millisecondsDebounce,
+    this.autoCheckValidate = true,
+    this.firstDate,
+    this.lastDate,
+    this.dropdownItems,
+    this.onDropdownChanged,
+    this.selectedDropdownItem,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -107,26 +134,61 @@ class CustomTextInput extends StatefulWidget {
   }
 }
 
+// Data class for dropdown items
+class DropdownItem {
+  final String id;
+  final String value;
+  final dynamic additionalData;
+
+  DropdownItem({required this.id, required this.value, this.additionalData});
+}
+
 class TextFieldState extends State<CustomTextInput> {
   bool _showText = true;
   late List<TextInputFormatter> inputFormatters;
   String errorText = '';
   late TextEditingController textController;
+  Timer? _debounce;
+  DropdownItem? _selectedItem;
+
   DateTime? firstDate;
   DateTime? lastDate;
+
+  void setErrorText(String error) {
+    setState(() {
+      errorText = error;
+    });
+  }
+
+  void setText(String text, {bool updateGetTextFieldValue = false}) {
+    setState(() {
+      textController.text = text;
+      if (updateGetTextFieldValue == true) {
+        _validate();
+        widget.getTextFieldValue?.call(text);
+      }
+    });
+  }
 
   @override
   void initState() {
     firstDate = widget.firstDate;
     lastDate = widget.lastDate;
+    _selectedItem = widget.selectedDropdownItem;
     super.initState();
     textController = widget.textController ?? TextEditingController();
+
     if (widget.initData != null) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
-        textController.text =
-            widget.formatCurrency ? Common.formatPrice(widget.initData, showPrefix: false) : widget.initData.toString();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.isDropdownTF && _selectedItem != null) {
+          textController.text = _selectedItem!.value;
+        } else {
+          textController.text =
+          widget.formatCurrency ? Common.formatPrice(widget.initData, showPrefix: false) : widget.initData.toString();
+        }
       });
     }
+
     if (widget.formatNumber || widget.formatCurrency || widget.formatPercent) {
       inputFormatters = [NumericTextFormatter(widget.formatCurrency, widget.formatPercent)];
     } else if (widget.formatDecimal) {
@@ -134,36 +196,113 @@ class TextFieldState extends State<CustomTextInput> {
     } else {
       inputFormatters = [];
     }
+
+    if(widget.autoCheckValidate == false){
+      widget.focusNode?.addListener(() {
+        if (!widget.focusNode!.hasFocus) {
+          _validate();
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomTextInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initData != oldWidget.initData) {
+      if (widget.isDropdownTF && widget.selectedDropdownItem != null) {
+        textController.text = widget.selectedDropdownItem!.value;
+      } else {
+        textController.text =
+        widget.formatCurrency ? Common.formatPrice(widget.initData, showPrefix: false) : widget.initData.toString();
+      }
+    }
+
+    if (widget.selectedDropdownItem != oldWidget.selectedDropdownItem) {
+      _selectedItem = widget.selectedDropdownItem;
+      if (_selectedItem != null) {
+        textController.text = _selectedItem!.value;
+      }
+    }
+  }
+
+  void _showDropdownMenu(BuildContext context) {
+    if (widget.dropdownItems == null || widget.dropdownItems!.isEmpty) return;
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        height: 300,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              child: CustomTextLabel(
+                widget.title.isNotEmpty ? widget.title : widget.hintText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Divider(height: 1),
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.dropdownItems!.length,
+                itemBuilder: (context, index) {
+                  final item = widget.dropdownItems![index];
+                  return ListTile(
+                    title: CustomTextLabel(item.value),
+                    onTap: () {
+                      setState(() {
+                        _selectedItem = item;
+                        textController.text = item.value;
+                      });
+                      widget.onDropdownChanged?.call(item);
+                      widget.getTextFieldValue?.call(item.value);
+                      Navigator.pop(context);
+                      _validate();
+                    },
+                    selected: _selectedItem?.id == item.id,
+                    selectedTileColor: AppColors.base_color.withOpacity(0.1),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Determine if text input should be disabled
+    bool isReadOnly = widget.isDateTimeTF || widget.isDropdownTF;
+
     return Container(
-      // height: widget.height ?? double.infinity,
       width: widget.width ?? double.infinity,
       margin: widget.margin ?? EdgeInsets.zero,
       child: Wrap(
         children: [
-          (widget.isElevation == false)
-              ? Container(
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: CustomTextLabel(
-                    widget.title,
-                    color: AppColors.base_color,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )
-              : Container(),
+          if (widget.title.isNotEmpty)
+            CustomTextLabel.renderBaseTitle(title: widget.title, isRequired: widget.isRequired),
           Container(
             height: widget.heightTextInput,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: widget.enabled ? widget.colorBgTextField : widget.colorBgTextFieldDisable,
-                borderRadius: BorderRadius.circular(widget.enabled ? 5 : 0)),
+                borderRadius: BorderRadius.circular(20)),
             child: Stack(
               children: [
                 TextField(
+                  focusNode: widget.focusNode,
                   inputFormatters: inputFormatters,
                   maxLength: widget.maxLength,
                   cursorColor: AppColors.base_color,
@@ -171,142 +310,164 @@ class TextFieldState extends State<CustomTextInput> {
                   enabled: widget.enabled,
                   textAlign: widget.align ?? TextAlign.start,
                   textAlignVertical: TextAlignVertical.center,
+                  onTap: widget.onTap,
                   style: TextStyle(
                       color: widget.colorText,
-                      fontSize: widget.fontSize ?? 15,
+                      fontSize: widget.fontSize ?? 14,
                       fontWeight: widget.fontWeight ?? FontWeight.w400),
                   decoration: InputDecoration(
                       counterText: "",
-                      suffixIcon: (widget.isPasswordTF == true)
-                          ? IconButton(
-                              icon: Icon(!_showText ? Icons.visibility : Icons.visibility_off, color: Colors.grey),
-                              onPressed: () {
-                                setState(() {
-                                  _showText = !_showText;
-                                });
-                              },
-                            )
-                          : (widget.isDateTimeTF == true)
-                              ? IconButton(
+                      suffixIcon: Padding(
+                        padding: EdgeInsets.only(right: widget.suffixIconMargin ?? 10),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (errorText.isNotEmpty && widget.enableErrorSuffix)
+                              Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                              ),
+                            if (widget.isPasswordTF == true)
+                              IconButton(
+                                icon: Icon(!_showText ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                                onPressed: () {
+                                  setState(() {
+                                    _showText = !_showText;
+                                  });
+                                },
+                              ),
+                            if (widget.isDateTimeTF == true)
+                              IconButton(
                                   onPressed: () {
                                     chooseDay(context);
                                   },
-                                  icon: Icon(
-                                    Icons.calendar_today,
-                                    size: 15,
-                                  ))
-                              : (widget.onTapTextField != null)
-                                  ? IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        size: 15,
-                                      ))
-                                  : widget.suffixIcon,
-                      prefixIcon: widget.prefixIcon,
+                                  icon: Icon(Icons.calendar_today_rounded)),
+                            if (widget.isDropdownTF == true)
+                              IconButton(
+                                onPressed: () {
+                                  if (widget.enabled) {
+                                    _showDropdownMenu(context);
+                                  }
+                                },
+                                icon: Icon(Icons.arrow_drop_down),
+                              ),
+                            if (widget.clearButton && textController.text.isNotEmpty)
+                              InkWell(
+                                onTap: () {
+                                  textController.clear();
+                                  setState(() {
+                                    if (widget.isDropdownTF) {
+                                      _selectedItem = null;
+                                      widget.onDropdownChanged?.call(null);
+                                    }
+                                  });
+                                  widget.getTextFieldValue?.call("");
+                                },
+                                child: Container(
+                                  // margin: EdgeInsets.only(right: 10),
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xffe6e8eb),
+                                    ),
+                                    child: Icon(
+                                      Icons.clear,
+                                      size: 10,
+                                    )),
+                              ),
+                            if (widget.suffixIcon != null)
+                              Padding(
+                                padding: EdgeInsets.only(left: 0, right: 0),
+                                child: widget.suffixIcon,
+                              ),
+                          ],
+                        ),
+                      ),
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: widget.prefixIcon,
+                      ),
                       focusColor: Colors.white,
                       border: InputBorder.none,
                       suffixIconConstraints: BoxConstraints(maxHeight: 35),
                       prefixIconConstraints: BoxConstraints(maxHeight: 35),
-                      disabledBorder: widget.hideUnderline
-                          ? (widget.enableBorder
-                              ? const OutlineInputBorder(borderSide: BorderSide(color: AppColors.base_color))
-                              : InputBorder.none)
-                          : const UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.base_color, width: 1),
-                            ),
-                      focusedBorder: widget.hideUnderline
-                          ? (widget.enableBorder
-                              ? OutlineInputBorder(borderSide: BorderSide(color: AppColors.base_color))
-                              : InputBorder.none)
-                          : const UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.base_color, width: 1),
-                            ),
-                      enabledBorder: widget.hideUnderline
-                          ? (widget.enableBorder
-                              ? OutlineInputBorder(borderSide: BorderSide(color: AppColors.base_color))
-                              : InputBorder.none)
-                          : const UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.base_color, width: 1),
-                            ),
-                      hintStyle: TextStyle(color: AppColors.base_color, fontWeight: FontWeight.w400, fontSize: 15),
-                      hintText: Language.of(context)?.getText.call(widget.hintText),
+                      disabledBorder: widget.disabledBorder ??
+                          UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                      focusedBorder: widget.focusedBorder ??
+                          UnderlineInputBorder(borderSide: BorderSide(color: AppColors.focusBorder)),
+                      enabledBorder: widget.enabledBorder ??
+                          UnderlineInputBorder(
+                              borderSide: BorderSide(color: errorText == "" ? AppColors.border : AppColors.colorError)),
+                      hintStyle: widget.hintStyle ??
+                          TextStyle(
+                              color: !widget.enabled ? AppColors.black : AppColors.hintTextColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14),
+                      hintText: widget.hintText,
                       isDense: true,
-                      // and add this line
-                      contentPadding: widget.padding ??
-                          EdgeInsets.symmetric(horizontal: widget.hideUnderline == false ? 0 : 10, vertical: 10)),
+                      contentPadding: widget.padding ?? EdgeInsets.symmetric(horizontal: 10, vertical: 12)),
                   controller: textController,
-                  obscureText: widget.obscureText == null ? _showText : widget.obscureText!,
+                  obscureText: widget.isPasswordTF == true ? (_showText) : widget.obscureText,
                   keyboardType: widget.formatCurrency ? TextInputType.number : widget.keyboardType,
                   textInputAction: widget.textInputAction,
                   onSubmitted: widget.onSubmitted,
                   onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   maxLines: widget.maxLines,
                   minLines: widget.minLines,
-                  onTap: () {
-                    if (textController.text == '0') {
-                      textController.selection =
-                          TextSelection.fromPosition(TextPosition(offset: textController.text.length));
+                  onChanged: (String _text) {
+                    if(widget.autoCheckValidate) {
+                      _validate();
+                    }
+                    if (widget.clearButton == true) setState(() {});
+                    String currentText = _text.trim();
+                    if (widget.millisecondsDebounce != null) {
+                      if (_debounce?.isActive ?? false) _debounce?.cancel();
+                      _debounce = Timer(Duration(milliseconds: widget.millisecondsDebounce!), () {
+                        widget.getTextFieldValue?.call(currentText);
+                      });
+                    } else {
+                      widget.getTextFieldValue?.call(currentText);
                     }
                   },
-                  onChanged: (String _text) {
-                    _validate();
-                    String currentText = _text.trim();
-                    widget.getTextFieldValue?.call(currentText);
-                  },
                 ),
-                if (widget.isDateTimeTF)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: InkWell(
-                      onTap: () {
-                        if (this.widget.enabled) chooseDay(context);
-                      },
-                      child: Container(),
-                    ),
-                  ),
-                widget.onTapTextField != null
+                widget.onTapTextField != null || widget.isDropdownTF || widget.isDateTimeTF
                     ? Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: InkWell(
-                          onTap: () {
-                            if (this.widget.enabled) widget.onTapTextField?.call();
-                          },
-                          child: Container(),
-                        ),
-                      )
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: InkWell(
+                    onTap: () {
+                      if (this.widget.enabled) {
+                        if (widget.isDropdownTF) {
+                          _showDropdownMenu(context);
+                        } else if (widget.isDateTimeTF) {
+                          chooseDay(context);
+                        } else {
+                          widget.onTapTextField?.call();
+                        }
+                      }
+                    },
+                    child: Container(),
+                  ),
+                )
                     : Container(),
               ],
             ),
           ),
           errorText.isNotEmpty
+              ? ErrorTextWidget(errorText: errorText)
+              : widget.hintUnderText.isNotEmpty
               ? Container(
-                  margin: EdgeInsets.only(top: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.error,
-                        size: 13,
-                        color: Colors.red,
-                      ),
-                      SizedBox(width: 2),
-                      Expanded(
-                        child: CustomTextLabel(
-                          errorText,
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+            margin: EdgeInsets.only(top: 6),
+            child: Text(
+              widget.hintUnderText,
+              style: TextStyle(
+                  color: !widget.enabled ? AppColors.black : AppColors.hintTextColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12),
+            ),
+          )
               : Container()
         ],
       ),
@@ -315,6 +476,24 @@ class TextFieldState extends State<CustomTextInput> {
 
   String getText(DateTime dateTime) {
     return Common.datetimeToSting(dateTime);
+  }
+
+  bool get isValid => _validate();
+
+  String get value => textController.text.trim();
+
+  DropdownItem? get selectedDropdownItem => _selectedItem;
+
+  bool _validate() {
+    if (widget.validator != null) {
+      String _text = textController.text.trim();
+      String? validate = widget.validator!.call(_text);
+      setState(() {
+        this.errorText = validate ?? "";
+      });
+      return this.errorText.isEmpty;
+    }
+    return true;
   }
 
   Future chooseDay(BuildContext context) async {
@@ -329,26 +508,26 @@ class TextFieldState extends State<CustomTextInput> {
     }
 
     var newDate =
-        await showDatePicker(context: context, initialDate: initDate, firstDate: firstDate, lastDate: lastDate);
+    await showDatePicker(context: context, initialDate: initDate, firstDate: firstDate, lastDate: lastDate,
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: AppColors.base_pink,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.base_pink,
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        }
+    );
     if (newDate == null) return;
     textController.text = getText(newDate);
     widget.getTextFieldValue?.call(value);
-  }
-
-  bool get isValid => _validate();
-
-  String get value => textController.text.trim();
-
-  bool _validate() {
-    if (widget.validator != null) {
-      String _text = textController.text.trim();
-      String? validate = widget.validator!.call(_text);
-      setState(() {
-        this.errorText = validate ?? "";
-      });
-      return this.errorText.isEmpty;
-    }
-    return true;
   }
 }
 

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:ngoc_base_flutter/gen/i18n/generated_locales/l10n.dart';
-import 'package:ngoc_base_flutter/ui/widget/locale_widget.dart';
-import 'package:ngoc_base_flutter/util/navigator.dart';
+import 'package:ottstudy/util/navigator.dart';
 import 'blocs/cubit.dart';
+import 'gen/i18n/generated_locales/l10n.dart';
+import 'ui/widget/locale_widget.dart';
 import 'util/routes.dart';
 import 'util/shared_preference.dart';
 
@@ -15,7 +15,7 @@ void main() async {
   String language = await SharedPreferenceUtil.getCurrentLanguage();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.dark, // Màu biểu tượng trên status bar
+      statusBarIconBrightness: Brightness.dark,
     ),
   );
   runApp(
