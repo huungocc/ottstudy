@@ -1,6 +1,9 @@
 import 'dart:math' as Math;
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
+
+import '../ui/screen/tool/calculator_screen.dart';
 
 class Common {
   static DateTime? parserDate(String? date, {String? format}) {
@@ -153,5 +156,29 @@ class Common {
 
   static shareContent(String content) {
     Share.share(content);
+  }
+
+  static String formatTimeGps(int seconds) {
+    if (seconds < 60) {
+      return '${seconds}s';
+    } else if (seconds < 3600) {
+      int minutes = seconds ~/ 60;
+      int remainingSeconds = seconds % 60;
+      return '${minutes}p${remainingSeconds}s';
+    } else {
+      int hours = seconds ~/ 3600;
+      int minutes = (seconds % 3600) ~/ 60;
+      int remainingSeconds = seconds % 60;
+      return '${hours}g${minutes}p${remainingSeconds}s';
+    }
+  }
+
+  static void showCalculator(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const CalculatorScreen(),
+    );
   }
 }

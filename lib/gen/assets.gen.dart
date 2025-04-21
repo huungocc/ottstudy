@@ -9,6 +9,16 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsFilesGen {
+  const $AssetsFilesGen();
+
+  /// File path: assets/files/pdf_test.pdf
+  String get pdfTest => 'assets/files/pdf_test.pdf';
+
+  /// List of all assets
+  List<String> get values => [pdfTest];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -19,17 +29,67 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_back.png
   AssetGenImage get icBack => const AssetGenImage('assets/images/ic_back.png');
 
+  /// File path: assets/images/ic_brain_white.png
+  AssetGenImage get icBrainWhite =>
+      const AssetGenImage('assets/images/ic_brain_white.png');
+
+  /// File path: assets/images/ic_clock.png
+  AssetGenImage get icClock =>
+      const AssetGenImage('assets/images/ic_clock.png');
+
+  /// File path: assets/images/ic_clock_white.png
+  AssetGenImage get icClockWhite =>
+      const AssetGenImage('assets/images/ic_clock_white.png');
+
+  /// File path: assets/images/ic_explorer.png
+  AssetGenImage get icExplorer =>
+      const AssetGenImage('assets/images/ic_explorer.png');
+
+  /// File path: assets/images/ic_explorer_white.png
+  AssetGenImage get icExplorerWhite =>
+      const AssetGenImage('assets/images/ic_explorer_white.png');
+
+  /// File path: assets/images/img_girl_home.png
+  AssetGenImage get imgGirlHome =>
+      const AssetGenImage('assets/images/img_girl_home.png');
+
+  /// File path: assets/images/img_login.png
+  AssetGenImage get imgLogin =>
+      const AssetGenImage('assets/images/img_login.png');
+
+  /// File path: assets/images/img_password.png
+  AssetGenImage get imgPassword =>
+      const AssetGenImage('assets/images/img_password.png');
+
+  /// File path: assets/images/img_sign.png
+  AssetGenImage get imgSign =>
+      const AssetGenImage('assets/images/img_sign.png');
+
   /// File path: assets/images/login_background.png
   AssetGenImage get loginBackground =>
       const AssetGenImage('assets/images/login_background.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [appBarBackground, icBack, loginBackground];
+  List<AssetGenImage> get values => [
+        appBarBackground,
+        icBack,
+        icBrainWhite,
+        icClock,
+        icClockWhite,
+        icExplorer,
+        icExplorerWhite,
+        imgGirlHome,
+        imgLogin,
+        imgPassword,
+        imgSign,
+        loginBackground
+      ];
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
+  static const $AssetsFilesGen files = $AssetsFilesGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
@@ -66,7 +126,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {

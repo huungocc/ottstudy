@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ngoc_base_flutter/util/routes.dart';
-
+import 'package:ottstudy/util/routes.dart';
 import '../ui/widget/widget.dart';
 import 'localizations.dart';
 

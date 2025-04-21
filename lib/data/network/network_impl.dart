@@ -8,7 +8,7 @@ import 'requests/base_request.dart';
 
 class Network {
   static final instanceNetworkAuth = "instanceNetworkAuth";
-  final String? baseUrl;
+  late final String? baseUrl;
   final int? timeOut;
   static BaseOptions options = BaseOptions(
       connectTimeout: Constants.TIMEOUT_API, receiveTimeout: Constants.TIMEOUT_API, baseUrl: ApiConstant.apiHost);
@@ -52,17 +52,17 @@ class Network {
 
   Future<ApiResponse> post(
       {required String url,
-      Map<String, dynamic>? body,
-      Map<String, dynamic> params = const {},
-      String contentType = Headers.jsonContentType,
-      int? timeOut}) async {
+        dynamic body,
+        Map<String, dynamic> params = const {},
+        String contentType = Headers.jsonContentType,
+        int? timeOut, bool isOriginData = false}) async {
     try {
       if (timeOut != null) {
         _dio.options.connectTimeout = timeOut;
       }
       Response response = await _dio.post(
         url,
-        data: await BaseParamRequest.request(body),
+        data: isOriginData ? body : await BaseParamRequest.request(body),
         queryParameters: params,
         options: Options(responseType: ResponseType.json, contentType: contentType),
       );
