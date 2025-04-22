@@ -8,6 +8,7 @@ import '../gen/i18n/generated_locales/l10n.dart';
 class SPrefCache {
   // share preference key
   static const String KEY_TOKEN = "auth_token";
+  static const String PREF_USER_ROLE = "pref_user_role";
   static const String PREF_KEY_LANGUAGE = "pref_key_language";
   static const String PREF_KEY_USER_INFO = "pref_key_user_info";
   static const String PREF_KEY_IS_KEEP_LOGIN = "pref_key_is_keep_login";
@@ -33,6 +34,16 @@ class SharedPreferenceUtil {
   static Future<String> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(SPrefCache.KEY_TOKEN) ?? '';
+  }
+
+  static Future saveRole(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(SPrefCache.PREF_USER_ROLE, token);
+  }
+
+  static Future<String> getRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(SPrefCache.PREF_USER_ROLE) ?? '';
   }
 
   static Future saveKeepLogin(bool value) async {

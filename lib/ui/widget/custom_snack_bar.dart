@@ -8,9 +8,8 @@ import 'widget.dart';
 
 class CustomSnackBar<T extends Cubit<BaseState>> extends StatelessWidget {
   final double? fontSize;
-  final Color? textColor;
 
-  const CustomSnackBar({Key? key, this.fontSize, this.textColor}) : super(key: key);
+  const CustomSnackBar({Key? key, this.fontSize}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class CustomSnackBar<T extends Cubit<BaseState>> extends StatelessWidget {
               content: CustomTextLabel(
                 mess,
                 fontSize: fontSize ?? 14,
-                color: textColor ?? AppColors.base_color,
+                gradient: AppColors.base_gradient_1,
                 fontWeight: FontWeight.w400,
               ),
               behavior: SnackBarBehavior.floating,

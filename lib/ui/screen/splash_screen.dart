@@ -3,7 +3,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:scale_size/scale_size.dart';
 import '../../gen/assets.gen.dart';
 import '../../res/resources.dart';
+import '../../util/constants.dart';
 import '../../util/routes.dart';
+import '../../util/shared_preference.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -41,14 +43,19 @@ class _SplashState extends State<SplashScreen> {
   }
 
   openScreen(BuildContext context) async {
-    // String token = await SharedPreferenceUtil.getToken();
-    // await Future.delayed(Duration(seconds: 2));
-    // if (token.isEmpty) {
-    //   Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
-    // } else {
-    //   Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
-    // }
+    String token = await SharedPreferenceUtil.getToken();
+    String role = await SharedPreferenceUtil.getRole();
     await Future.delayed(Duration(seconds: 2));
-    Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+    if (token.isEmpty) {
+      Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+    } else {
+      if (role == UserRole.admin) {
+        Navigator.pushNamedAndRemoveUntil(context, Routes.adminHomeScreen, (route) => false);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
+      }
+    }
+    // await Future.delayed(Duration(seconds: 2));
+    // Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
   }
 }

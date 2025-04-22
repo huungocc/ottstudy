@@ -87,25 +87,26 @@ class Network {
           "error_api.connect",
         );
       default:
-        return ApiResponse.error(getDataMessage(e.response?.data, e.response?.statusMessage ?? ""),
-            data: getDataReplace(e.response?.data), code: e.response?.statusCode);
+        return ApiResponse.error(e.response?.data["ErrMsg"],
+            data: e.response?.data, code: e.response?.statusCode);
     }
   }
 
   ApiResponse getApiResponse(Response response) {
     return ApiResponse.success(
-      data: response.data,
+      data: response.data["Data"],
       code: response.statusCode,
-      message: response.statusMessage,
+      // message: response.statusMessage,
+      message: response.data is Map<String, dynamic> ? response.data["Message"] ?? response.statusMessage : response.statusMessage,
       status: response.data is Map<String, dynamic> ? response.data["Status"] : null,
-      errMessage: response.data is Map<String, dynamic> ? response.data["ErrMsg"] : null,
-      errCode: response.data is Map<String, dynamic> ? response.data["ErrCode"] : null,
+      // errMessage: response.data is Map<String, dynamic> ? response.data["ErrMsg"] : null,
+      // errCode: response.data is Map<String, dynamic> ? response.data["ErrCode"] : null,
     );
   }
 
   void handleTokenExpired() async {
     NavigationService.instance.showDialogTokenExpired();
-    // await SharedPreferenceUtil.clearData();
+    await SharedPreferenceUtil.clearData();
   }
 
   getDataReplace(data) {

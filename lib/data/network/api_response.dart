@@ -15,7 +15,7 @@ class ApiResponse<T> {
     this.errCode,
   });
 
-  ApiResponse.error(this.message, {this.data, this.code});
+  ApiResponse.error(this.errMessage, {this.data, this.code});
 
   bool get isSuccess => this.code != null && this.code == 200;
   bool get isStatusSuccess => this.status == 200;

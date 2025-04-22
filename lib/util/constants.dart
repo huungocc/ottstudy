@@ -17,4 +17,9 @@ class FormatDate {
   static const String yyyyMMdd = "yyyyMMdd";
 }
 
+class UserRole {
+  static const String admin = "admin";
+  static const String user = "user";
+}
+
 

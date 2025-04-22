@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../res/colors.dart';
 import '../../../util/routes.dart';
+import '../../../util/shared_preference.dart';
 import '../../widget/base_screen.dart';
 import '../../widget/base_text_input.dart';
 import '../../widget/common_widget.dart';
@@ -52,7 +53,8 @@ class _AdminHomeBodyState extends State<AdminHomeBody> {
         ),
         SizedBox(width: 20,),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            await SharedPreferenceUtil.clearData();
             Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
           },
           child: PhosphorIcon(
