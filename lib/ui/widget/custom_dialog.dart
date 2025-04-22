@@ -13,7 +13,7 @@ class CustomDialog extends StatelessWidget {
   const CustomDialog({
     Key? key,
     this.onSubmit,
-    this.titleSubmit = "title_ok",
+    this.titleSubmit = "Ok",
     this.image,
     this.content,
     this.buttonText,

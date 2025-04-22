@@ -3,6 +3,7 @@ import 'package:ottstudy/ui/screen/tool/calculator_screen.dart';
 import 'package:ottstudy/ui/widget/base_button.dart';
 import 'package:ottstudy/ui/widget/base_network_image.dart';
 import 'package:ottstudy/ui/widget/custom_text_label.dart';
+import 'package:ottstudy/util/shared_preference.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../res/colors.dart';
@@ -165,7 +166,8 @@ class _AccountScreenState extends State<AccountScreen> {
           backgroundColor: AppColors.white,
           borderRadius: 20,
           titleColor: AppColors.base_pink,
-          onTap: () {
+          onTap: () async {
+            await SharedPreferenceUtil.clearData();
             Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
           },
         ),

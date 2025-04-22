@@ -114,6 +114,13 @@ class Common {
     return regex.hasMatch(text);
   }
 
+  static bool validatePassword(String text) {
+    final passwordRegex = RegExp(
+        r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~%^()_+{}\[\]:;<>,.?\/\\|]).{8,}$'
+    );
+    return passwordRegex.hasMatch(text);
+  }
+
   static bool validatePhone(String text) {
     RegExp regex = RegExp("^[0-9\-\+]{10,15}\$");
     return regex.hasMatch(text);

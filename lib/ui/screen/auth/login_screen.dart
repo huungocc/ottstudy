@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ottstudy/data/models/models.dart';
 
 import '../../../blocs/base_bloc/base.dart';
 import '../../../blocs/cubit.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../res/colors.dart';
+import '../../../util/common.dart';
+import '../../../util/constants.dart';
 import '../../../util/routes.dart';
 import '../../widget/widget.dart';
 
@@ -34,8 +37,8 @@ class _LoginScreenState extends State<LoginBody> {
     return BaseScreen(
       hideAppBar: true,
       resizeToAvoidBottomInset: true,
-      // loadingWidget: CustomLoading<LoginCubit>(),
-      // messageNotify: CustomSnackBar<LoginCubit>(),
+      loadingWidget: CustomLoading<LoginCubit>(),
+      messageNotify: CustomSnackBar<LoginCubit>(),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -66,7 +69,11 @@ class _LoginScreenState extends State<LoginBody> {
                   hintText: "Nhập email",
                   validator: (String value) {
                     if (value.isEmpty) {
-                      return "Loi";
+                      return "Email không được để trống";
+                    } else if (!Common.validateEmail(value)) {
+                      return "Vui lòng nhập đúng định dạng email";
+                    } else {
+                      return "";
                     }
                   },
                 ),
@@ -85,24 +92,36 @@ class _LoginScreenState extends State<LoginBody> {
                   hintText: "Nhập mật khẩu",
                   validator: (String value) {
                     if (value.isEmpty) {
-                      return "Loi";
+                      return "Mật khẩu không được để trống";
+                    } else if (!Common.validatePassword(value)) {
+                      return "Vui lòng nhập mật khẩu có ít nhất 8 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt";
+                    } else {
+                      return "";
                     }
                   },
                 ),
-                // BlocListener<LoginCubit, BaseState>(
-                //   listener: (_, state) {
-                //     if (state is LoadedState) {
-                //       Navigator.pushNamed(context, Routes.mainScreen);
-                //     }
-                //   },
-                //   child: Container(),
-                // ),
+                BlocListener<LoginCubit, BaseState>(
+                  listener: (_, state) {
+                    if (state is LoadedState<UserModel>) {
+                      if (state.data.role == UserRole.admin) {
+                        Navigator.pushNamedAndRemoveUntil(context, Routes.adminHomeScreen, (route) => false);
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
+                      }
+                    }
+                  },
+                  child: Container(),
+                ),
                 const SizedBox(height: 20,),
                 BaseButton(
                   onTap: () {
-                    // BlocProvider.of<LoginCubit>(context).doLogin(userName: "111", password: "1232");
-                    Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
-                    // Navigator.pushNamedAndRemoveUntil(context, Routes.adminHomeScreen, (route) => false);
+                    if (_keyEmail.currentState!.isValid == true && _keyPassword.currentState!.isValid == true) {
+                      Map<String, dynamic> body = {
+                        "email": _keyEmail.currentState?.value,
+                        "password": _keyPassword.currentState?.value,
+                      };
+                      BlocProvider.of<LoginCubit>(context).doLogin(body);
+                    }
                   },
                   borderRadius: 20,
                   title: 'Đăng nhập',
