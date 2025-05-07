@@ -51,7 +51,8 @@ class _LoginScreenState extends State<LoginBody> {
                   child: Assets.images.imgLogin.image()
                 ),
                 const SizedBox(height: 40,),
-                const CustomTextLabel('Xin chào bạn!', gradient: AppColors.base_gradient_1, fontWeight: FontWeight.bold,
+                const CustomTextLabel('Chào mừng đến với 123Study!', gradient: AppColors.base_gradient_1, fontWeight:
+                FontWeight.bold,
                   fontSize: 20,),
                 const SizedBox(height: 10,),
                 const CustomTextLabel('Hãy đăng nhập để bắt đầu học nhé.'),
@@ -125,6 +126,16 @@ class _LoginScreenState extends State<LoginBody> {
                   },
                   borderRadius: 20,
                   title: 'Đăng nhập',
+                ),
+                const SizedBox(height: 10,),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.forgotPasswordScreen);
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: CustomTextLabel('Quên mật khẩu?', gradient: AppColors.base_gradient_1,)
+                  )
                 )
               ],
             ),

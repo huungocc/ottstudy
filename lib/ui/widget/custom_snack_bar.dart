@@ -17,8 +17,8 @@ class CustomSnackBar<T extends Cubit<BaseState>> extends StatelessWidget {
         child: Container(),
         listener: (context, state) {
           String? mess;
-          if (state is LoadedState && state.msgError.isNotEmpty) {
-            mess = state.msgError;
+          if (state is LoadedState && state.message.isNotEmpty) {
+            mess = state.message;
           } else if (state is ErrorState) {
             mess = state.data;
           }

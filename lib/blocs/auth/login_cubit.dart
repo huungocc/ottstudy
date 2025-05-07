@@ -22,7 +22,7 @@ class LoginCubit extends Cubit<BaseState> {
         await SharedPreferenceUtil.saveRole(userModel.role ?? '');
         emit(LoadedState<UserModel>(userModel));
       } else {
-        emit(ErrorState(response.errMessage ?? "Đăng nhập thất bại"));
+        emit(ErrorState(response.errMessage ?? "Đã có lỗi xảy ra"));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
+import '../../gen/assets.gen.dart';
 import '../../res/resources.dart';
 import 'widget.dart';
 
 class CustomDialog extends StatelessWidget {
   final Function? onSubmit;
   final String titleSubmit;
-  final Image? image;
-  final String? content;
+  //final Widget? image;
+  final dynamic content;
   final String? buttonText;
+  final bool? hasCloseButton;
 
   const CustomDialog({
     Key? key,
     this.onSubmit,
     this.titleSubmit = "Ok",
-    this.image,
+    //this.image,
     this.content,
     this.buttonText,
+    this.hasCloseButton = false
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         child: Stack(
@@ -32,41 +32,43 @@ class CustomDialog extends StatelessWidget {
             Wrap(children: [
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(11),
+                padding: EdgeInsets.fromLTRB(20, hasCloseButton == true ? 0 : 20, 20, 20),
                 decoration: new BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10.0,
-                      offset: const Offset(0.0, 10.0),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: [
-                    Container(margin: EdgeInsets.only(top: 16), child: image),
-                    Container(
-                      margin: EdgeInsets.only(top: 16),
-                      child: CustomTextLabel(
-                        content,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        textAlign: TextAlign.center,
+                    //Assets.images.imgSendGray.image(scale: 3.5),
+                    if (hasCloseButton == true)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: Icon(Icons.close_rounded),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }
                       ),
                     ),
-                    GestureDetector(
+                    if (content is String)
+                    Container(
+                      margin: const EdgeInsets.only(top: 15, bottom: 15),
+                      child: CustomTextLabel(
+                        content,
+                        textAlign: TextAlign.center,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    if (content is Widget) content,
+                    const SizedBox(height: 20,),
+                    BaseButton(
+                      title: titleSubmit,
                       onTap: () {
-                        Navigator.of(context).pop();
+                        //Navigator.of(context).pop();
                         onSubmit?.call();
                       },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 20, bottom: 12),
-                        child: CustomTextLabel(titleSubmit,
-                            fontWeight: FontWeight.w500, fontSize: 16, color: AppColors.base_color),
-                      ),
                     )
                   ],
                 ),

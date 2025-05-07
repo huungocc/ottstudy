@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ottstudy/data/models/forgot_password_model.dart';
 import 'package:ottstudy/ui/screen/auth/signup_screen.dart';
 import 'package:ottstudy/ui/screen/course/my_course_screen.dart';
 import 'package:ottstudy/ui/screen/course/video_lesson_screen.dart';
@@ -13,7 +14,9 @@ import 'package:ottstudy/ui/screen/tool/chat_bot_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import '../ui/screen/admin/admin_course_info_screen.dart';
 import '../ui/screen/admin/admin_home_screen.dart';
+import '../ui/screen/auth/forgot_password_screen.dart';
 import '../ui/screen/auth/login_screen.dart';
+import '../ui/screen/auth/reset_password_screen.dart';
 import '../ui/screen/course/course_info_screen.dart';
 import '../ui/screen/course/pdf_lesson_screen.dart';
 import '../ui/screen/exam/essay_screen.dart';
@@ -44,6 +47,8 @@ class Routes {
   static const String adminCourseInfoScreen = "/adminCourseInfoScreen";
   static const String editAccountInfoScreen = "/editAccountInfoScreen";
   static const String changePasswordScreen = "/changePasswordScreen";
+  static const String forgotPasswordScreen = "/forgotPasswordScreen";
+  static const String resetPasswordScreen = "/resetPasswordScreen";
 
   //init screen name
   static String initScreen() => splashScreen;
@@ -56,6 +61,19 @@ class Routes {
         return PageTransition(child: LoginScreen(), type: PageTransitionType.fade);
       case signupScreen:
         return PageTransition(child: SignupScreen(), type: PageTransitionType.fade);
+      case forgotPasswordScreen:
+        return PageTransition(child: ForgotPasswordScreen(), type: PageTransitionType.rightToLeft);
+      case resetPasswordScreen:
+        ForgotPasswordModel? arg;
+        if (settings.arguments is ForgotPasswordModel) {
+          arg = settings.arguments as ForgotPasswordModel;
+        }
+        return PageTransition(
+          child: ResetPasswordScreen(
+            arg: arg
+          ),
+          type: PageTransitionType.fade
+        );
       //Main
       case mainScreen:
         return PageTransition(child: MainScreen(), type: PageTransitionType.fade);
