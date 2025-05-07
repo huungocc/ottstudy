@@ -61,6 +61,14 @@ class $AssetsImagesGen {
   AssetGenImage get imgPassword =>
       const AssetGenImage('assets/images/img_password.png');
 
+  /// File path: assets/images/img_send.png
+  AssetGenImage get imgSend =>
+      const AssetGenImage('assets/images/img_send.png');
+
+  /// File path: assets/images/img_send_gray.png
+  AssetGenImage get imgSendGray =>
+      const AssetGenImage('assets/images/img_send_gray.png');
+
   /// File path: assets/images/img_sign.png
   AssetGenImage get imgSign =>
       const AssetGenImage('assets/images/img_sign.png');
@@ -81,6 +89,8 @@ class $AssetsImagesGen {
         imgGirlHome,
         imgLogin,
         imgPassword,
+        imgSend,
+        imgSendGray,
         imgSign,
         loginBackground
       ];
@@ -89,8 +99,12 @@ class $AssetsImagesGen {
 class Assets {
   const Assets._();
 
+  static const String aEnv = '.env';
   static const $AssetsFilesGen files = $AssetsFilesGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+
+  /// List of all assets
+  static List<String> get values => [aEnv];
 }
 
 class AssetGenImage {

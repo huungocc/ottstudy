@@ -5,6 +5,7 @@ import 'package:ottstudy/ui/widget/common_widget.dart';
 import 'package:ottstudy/ui/widget/custom_text_label.dart';
 
 import '../../../res/colors.dart';
+import '../../../util/routes.dart';
 
 class VideoLessonScreen extends StatelessWidget {
   const VideoLessonScreen({super.key});
@@ -44,7 +45,7 @@ class _VideoLessonBodyState extends State<VideoLessonBody> {
                 const SizedBox(height: 20,),
                 CommonWidget.doExerciseButton(
                   onTap: () {
-
+                    Navigator.pushNamed(context, Routes.quizScreen);
                   }
                 ),
               ],

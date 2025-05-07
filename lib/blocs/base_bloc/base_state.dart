@@ -13,11 +13,11 @@ class LoadingState extends BaseState {}
 
 class LoadedState<T> extends BaseState {
   final T data;
-  final String msgError;
+  final String message;
   final timeEmit;
   final bool isLocalizeMessage;
 
-  LoadedState(this.data, {this.msgError = "", this.timeEmit, this.isLocalizeMessage = true});
+  LoadedState(this.data, {this.message = "", this.timeEmit, this.isLocalizeMessage = true});
 
   @override
   List<Object> get props => [data as Object, timeEmit ?? ""];

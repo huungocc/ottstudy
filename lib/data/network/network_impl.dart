@@ -88,7 +88,7 @@ class Network {
         );
       default:
         return ApiResponse.error(e.response?.data["ErrMsg"],
-            data: e.response?.data, code: e.response?.statusCode);
+            data: e.response?.data["ErrMsg"], code: e.response?.statusCode);
     }
   }
 

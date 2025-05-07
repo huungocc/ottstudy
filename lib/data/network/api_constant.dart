@@ -1,9 +1,15 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiConstant {
-  static final apiHost = "http://192.168.1.199:8080/";
+  static final apiHost = dotenv.env['API_URL'].toString();
+  // static final apiHost = dotenv.env['API_URL_LOCAL'].toString();
 
   //Auth
   static final login = "auth/login";
   static final signup = "";
+  static final forgotPassword = "auth/forgot_password";
+  static final verifyOtp = "auth/verify_reset_token";
+  static final resetPassword = "auth/reset_password";
 
   //Account
   static final changePassword = "auth/change_password";
@@ -11,5 +17,5 @@ class ApiConstant {
 
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-  static final geminiKey = "AIzaSyDLY4ZtZ4LPh0-yZek7wTHZTVvsqSaYIkA";
+  static final geminiKey = dotenv.env['GEMINI_KEY'].toString();
 }
