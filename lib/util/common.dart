@@ -26,6 +26,22 @@ class Common {
     }
   }
 
+  static String convertDateToIsoFormat(String? inputDate) {
+    if (inputDate == null || inputDate.trim().isEmpty) {
+      return '';
+    }
+
+    try {
+      final inputFormat = DateFormat('dd/MM/yyyy');
+      final outputFormat = DateFormat('yyyy-MM-dd');
+      final dateTime = inputFormat.parse(inputDate);
+      return outputFormat.format(dateTime);
+    } catch (e) {
+      return '';
+    }
+  }
+
+
   static int strToInt(String data, {int defaultValue = 0}) {
     try {
       if (data.isEmpty) return defaultValue;

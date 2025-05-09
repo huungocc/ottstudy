@@ -136,7 +136,7 @@ class CustomTextInput extends StatefulWidget {
 
 // Data class for dropdown items
 class DropdownItem {
-  final String id;
+  final int id;
   final String value;
   final dynamic additionalData;
 

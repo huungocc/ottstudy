@@ -17,8 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _todayStudyTime = 365;
-
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
@@ -38,9 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   CustomTextLabel('Xin chào, Nguyễn Hữu Ngọc!', gradient: AppColors.base_gradient_4,
                     fontWeight:
                     FontWeight.bold, fontSize: 16,),
-                  _todayStudyTime == null
-                      ? CustomTextLabel('Bạn muốn học gì hôm nay?')
-                      : CustomTextLabel('Hôm nay bạn đã học được ${Common.formatTimeGps(_todayStudyTime)}')
+                    CustomTextLabel('Bạn muốn học gì hôm nay?')
                 ],
               )
             ],
