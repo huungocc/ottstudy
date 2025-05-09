@@ -73,6 +73,30 @@ class Network {
     }
   }
 
+  Future<ApiResponse> put(
+      {required String url,
+        dynamic body,
+        Map<String, dynamic> params = const {},
+        String contentType = Headers.jsonContentType,
+        int? timeOut,
+        bool isOriginData = false}) async {
+    try {
+      if (timeOut != null) {
+        _dio.options.connectTimeout = timeOut;
+      }
+      Response response = await _dio.put(
+        url,
+        data: isOriginData ? body : await BaseParamRequest.request(body),
+        queryParameters: params,
+        options: Options(responseType: ResponseType.json, contentType: contentType),
+      );
+      return getApiResponse(response);
+    } catch (e) {
+      print("===put =====${e}");
+      return getError(e as DioError);
+    }
+  }
+
   ApiResponse getError(DioError e) {
     if (e.response?.statusCode == 401) {
       handleTokenExpired();

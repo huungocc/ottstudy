@@ -6,7 +6,7 @@ class ApiConstant {
 
   //Auth
   static final login = "auth/login";
-  static final signup = "";
+  static final signup = "auth/register";
   static final forgotPassword = "auth/forgot_password";
   static final verifyOtp = "auth/verify_reset_token";
   static final resetPassword = "auth/reset_password";
@@ -14,6 +14,8 @@ class ApiConstant {
   //Account
   static final changePassword = "auth/change_password";
   static final updateProfile = "auth/update_profile";
+
+  static final uploadFile = "upload";
 
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";

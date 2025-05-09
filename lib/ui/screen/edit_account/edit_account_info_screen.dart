@@ -232,11 +232,11 @@ class _EditAccountInfoBodyState extends State<EditAccountInfoBody> {
               hintText: "Lớp",
               isDropdownTF: true,
               dropdownItems: [
-                DropdownItem(id: '1', value: 'Lớp 1'),
-                DropdownItem(id: '2', value: 'Lớp 2'),
-                DropdownItem(id: '3', value: 'Lớp 3'),
-                DropdownItem(id: '4', value: 'Lớp 4'),
-                DropdownItem(id: '5', value: 'Lớp 5')
+                DropdownItem(id: 1, value: 'Lớp 1'),
+                DropdownItem(id: 2, value: 'Lớp 2'),
+                DropdownItem(id: 3, value: 'Lớp 3'),
+                DropdownItem(id: 4, value: 'Lớp 4'),
+                DropdownItem(id: 5, value: 'Lớp 5')
               ],
             ),
           ],
