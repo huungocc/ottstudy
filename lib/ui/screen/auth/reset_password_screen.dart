@@ -59,6 +59,7 @@ class _ResetPasswordBodyState extends State<ResetPasswordBody> {
             CustomTextInput(
               key: _keyNewPassword,
               isPasswordTF: true,
+              isRequired: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: AppColors.white, width: 1),
                 borderRadius: BorderRadius.circular(20),
@@ -82,6 +83,7 @@ class _ResetPasswordBodyState extends State<ResetPasswordBody> {
             CustomTextInput(
               key: _keyConfirmPassword,
               isPasswordTF: true,
+              isRequired: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: AppColors.white, width: 1),
                 borderRadius: BorderRadius.circular(20),

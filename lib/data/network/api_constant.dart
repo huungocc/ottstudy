@@ -14,6 +14,7 @@ class ApiConstant {
   //Account
   static final changePassword = "auth/change_password";
   static final updateProfile = "auth/update_profile";
+  static final userInfo = "auth/user_info";
 
   static final uploadFile = "upload";
 

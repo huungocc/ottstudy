@@ -59,6 +59,7 @@ class _LoginScreenState extends State<LoginBody> {
                 const SizedBox(height: 40,),
                 CustomTextInput(
                   key: _keyEmail,
+                  isRequired: true,
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: AppColors.black, width: 1),
                     borderRadius: BorderRadius.circular(20),
@@ -82,6 +83,7 @@ class _LoginScreenState extends State<LoginBody> {
                 CustomTextInput(
                   key: _keyPassword,
                   isPasswordTF: true,
+                  isRequired: true,
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: AppColors.black, width: 1),
                     borderRadius: BorderRadius.circular(20),
