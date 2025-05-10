@@ -1,23 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ottstudy/blocs/base_bloc/base.dart';
-import 'package:ottstudy/data/models/models.dart';
 
+import '../../data/models/user_model.dart';
 import '../../data/network/api_constant.dart';
 import '../../data/network/api_response.dart';
 import '../../data/network/network_impl.dart';
 import '../utils.dart';
 
-class ChangePasswordCubit extends Cubit<BaseState> {
-  ChangePasswordCubit() : super(InitState());
+class UserInfoCubit extends Cubit<BaseState> {
+  UserInfoCubit() : super(InitState());
 
-  Future<void> changePassword(Map<String, dynamic> body) async {
+  Future<void> getUserInfo(Map<String, dynamic>? param) async {
     try {
       emit(LoadingState());
 
-      ApiResponse response = await Network().put(url: ApiConstant.changePassword, body: body);
+      ApiResponse response = await Network().get(url: ApiConstant.userInfo, params: param);
 
       if (response.isSuccess) {
-        emit(LoadedState<UserModel>(response.data));
+        UserModel userModel = UserModel.fromJson(response.data);
+        emit(LoadedState<UserModel>(userModel));
       } else {
         emit(ErrorState(response.errMessage ?? "Đã có lỗi xảy ra"));
       }

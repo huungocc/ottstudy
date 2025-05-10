@@ -170,6 +170,7 @@ class _SignupBodyState extends State<SignupBody> {
               ),
               CustomTextInput(
                 key: _keyEmail,
+                isRequired: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: AppColors.white, width: 1),
                   borderRadius: BorderRadius.circular(20),
@@ -194,6 +195,7 @@ class _SignupBodyState extends State<SignupBody> {
               ),
               CustomTextInput(
                 key: _keyPassword,
+                isRequired: true,
                 isPasswordTF: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: AppColors.white, width: 1),
@@ -219,6 +221,7 @@ class _SignupBodyState extends State<SignupBody> {
               ),
               CustomTextInput(
                 key: _keyConfirmPassword,
+                isRequired: true,
                 isPasswordTF: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: AppColors.white, width: 1),
@@ -302,6 +305,7 @@ class _SignupBodyState extends State<SignupBody> {
               ),
               CustomTextInput(
                 key: _keyName,
+                isRequired: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: AppColors.white, width: 1),
                   borderRadius: BorderRadius.circular(20),
@@ -361,6 +365,7 @@ class _SignupBodyState extends State<SignupBody> {
               ),
               CustomTextInput(
                 key: _keyGrade,
+                isRequired: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: AppColors.white, width: 1),
                   borderRadius: BorderRadius.circular(20),
@@ -426,7 +431,11 @@ class _SignupBodyState extends State<SignupBody> {
                 password: _keyConfirmPassword.currentState!.value,
                 avatarUrl: imageUrl ?? '',
                 fullName: _keyName.currentState!.value,
-                birthDate: Common.convertDateToIsoFormat(_keyDateOfBirth.currentState!.value),
+                birthDate: Common.convertDateToFormat(
+                  _keyDateOfBirth.currentState!.value,
+                  inputFormat: 'dd/MM/yyyy',
+                  outputFormat: 'yyyy-MM-dd'
+                ),
                 phoneNumber: _keyPhone.currentState?.value ?? '',
                 grade: _keyGrade.currentState!.selectedDropdownItem!.id);
               context.read<SignupCubit>().doSignup(model);

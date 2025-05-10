@@ -169,6 +169,7 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody> {
             const SizedBox(height: 40,),
             CustomTextInput(
               key: _keyEmail,
+              isRequired: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: AppColors.white, width: 1),
                 borderRadius: BorderRadius.circular(20),

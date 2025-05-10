@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ottstudy/blocs/auth/user_info_cubit.dart';
 import 'package:ottstudy/util/navigator.dart';
 import 'blocs/cubit.dart';
 import 'gen/i18n/generated_locales/l10n.dart';
@@ -25,6 +26,9 @@ void main() async {
       providers: [
         BlocProvider(
           create: (_) => LanguageCubit(),
+        ),
+        BlocProvider(
+          create: (_) => UserInfoCubit(),
         ),
       ],
       child: MyApp.language(language),

@@ -301,6 +301,14 @@ class TextFieldState extends State<CustomTextInput> {
                 borderRadius: BorderRadius.circular(20)),
             child: Stack(
               children: [
+                if (widget.isRequired)
+                Container(
+                  padding: const EdgeInsets.only(left: 10, top: 3),
+                  child: const CustomTextLabel(
+                    "*",
+                    color: AppColors.colorError,
+                  ),
+                ),
                 TextField(
                   focusNode: widget.focusNode,
                   inputFormatters: inputFormatters,

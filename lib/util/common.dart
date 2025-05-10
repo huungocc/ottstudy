@@ -26,17 +26,26 @@ class Common {
     }
   }
 
-  static String convertDateToIsoFormat(String? inputDate) {
+  static String convertDateToFormat(
+      String? inputDate, {
+        String inputFormat = 'yyyy-MM-ddTHH:mm:ss.SSS',
+        String outputFormat = 'dd/MM/yyyy',
+      }) {
     if (inputDate == null || inputDate.trim().isEmpty) {
       return '';
     }
 
     try {
-      final inputFormat = DateFormat('dd/MM/yyyy');
-      final outputFormat = DateFormat('yyyy-MM-dd');
-      final dateTime = inputFormat.parse(inputDate);
-      return outputFormat.format(dateTime);
+      // Tạo định dạng cho chuỗi đầu vào
+      final inputDateFormat = DateFormat(inputFormat);
+      // Parse chuỗi đầu vào
+      final dateTime = inputDateFormat.parse(inputDate);
+      // Tạo định dạng cho chuỗi đầu ra
+      final outputDateFormat = DateFormat(outputFormat);
+      // Format lại chuỗi theo định dạng đầu ra
+      return outputDateFormat.format(dateTime);
     } catch (e) {
+      print('Error parsing date: $e');
       return '';
     }
   }

@@ -59,6 +59,7 @@ class _ChangePasswordBodyState extends State<ChangePasswordBody> {
             ),
             CustomTextInput(
               key: _keyOldPassword,
+              isRequired: true,
               isPasswordTF: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: AppColors.white, width: 1),
@@ -85,6 +86,7 @@ class _ChangePasswordBodyState extends State<ChangePasswordBody> {
             CustomTextInput(
               key: _keyNewPassword,
               isPasswordTF: true,
+              isRequired: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: AppColors.white, width: 1),
                 borderRadius: BorderRadius.circular(20),
@@ -110,6 +112,7 @@ class _ChangePasswordBodyState extends State<ChangePasswordBody> {
             CustomTextInput(
               key: _keyConfirmPassword,
               isPasswordTF: true,
+              isRequired: true,
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: AppColors.white, width: 1),
                 borderRadius: BorderRadius.circular(20),
