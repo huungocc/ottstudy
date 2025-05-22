@@ -63,16 +63,16 @@ class _CourseInfoBodyState extends State<CourseInfoBody> {
               ),
             ),
             const SizedBox(height: 20,),
-            CommonWidget.lessonInfo(
-              onTap: (){
-                Navigator.pushNamed(context, Routes.videoLessonScreen);
-                //Navigator.pushNamed(context, Routes.pdfLessonScreen);
-              }
-            ),
+            // CommonWidget.lessonInfo(
+            //   onTap: (){
+            //     Navigator.pushNamed(context, Routes.videoLessonScreen);
+            //     //Navigator.pushNamed(context, Routes.pdfLessonScreen);
+            //   }
+            // ),
             CommonWidget.examInfo(
               onTap: () {
-                //Navigator.pushNamed(context, Routes.QuizScreen);
-                Navigator.pushNamed(context, Routes.essayScreen);
+                Navigator.pushNamed(context, Routes.quizScreen);
+                //Navigator.pushNamed(context, Routes.essayScreen);
               }
             )
           ],

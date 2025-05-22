@@ -17,6 +17,20 @@ class ApiConstant {
   static final userInfo = "auth/user_info";
 
   static final uploadFile = "upload";
+  static final delete = "admin/delete";
+
+  //Course
+  static final listCourse = "course/list";
+  static final createCourse = "admin/create/course";
+
+  //Lesson
+  static final createLesson = "admin/create/lesson";
+
+  //Test
+  static final createTest = "admin/create/test";
+
+  //Question
+  static final createQuestion = "admin/create/question";
 
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";

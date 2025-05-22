@@ -46,7 +46,7 @@ class _AdminHomeBodyState extends State<AdminHomeBody> {
             //
           },
           child: PhosphorIcon(
-            PhosphorIcons.bellSimple(),
+            PhosphorIcons.chartBar(),
             color: AppColors.black,
             size: 30,
           ),
@@ -88,7 +88,7 @@ class _AdminHomeBodyState extends State<AdminHomeBody> {
               ),
               GestureDetector(
                 onTap: () {
-                  //
+                  Navigator.pushNamed(context, Routes.adminCourseEditScreen);
                 },
                 child: PhosphorIcon(
                   PhosphorIcons.plusCircle(),

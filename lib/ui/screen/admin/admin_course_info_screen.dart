@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ottstudy/res/colors.dart';
+import 'package:ottstudy/ui/screen/admin/registration_screen.dart';
 import 'package:ottstudy/ui/screen/admin/student_manage_screen.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:ottstudy/ui/widget/custom_tab_bar.dart';
@@ -14,11 +15,13 @@ class AdminCourseInfoScreen extends StatelessWidget {
     final List<CustomTab> tabs = [
       const CustomTab(label: 'Thông tin'),
       const CustomTab(label: 'Học sinh'),
+      const CustomTab(label: 'Đơn đăng ký'),
     ];
 
     final List<Widget> views = [
       const AdminCourseEditScreen(),
-      const StudentManageScreen()
+      const StudentManageScreen(),
+      const RegistrationScreen(),
     ];
 
     return BaseScreen(

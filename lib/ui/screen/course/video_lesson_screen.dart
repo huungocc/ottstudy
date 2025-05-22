@@ -60,7 +60,7 @@ class _VideoLessonBodyState extends State<VideoLessonBody> {
                 child: CustomTextLabel('Tiếp theo', fontWeight: FontWeight.bold,)
               ),
               const SizedBox(height: 10,),
-              CommonWidget.lessonInfo(),
+              //CommonWidget.lessonInfo(),
             ],
           ),
         ],

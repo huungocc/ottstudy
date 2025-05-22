@@ -9,11 +9,12 @@ import 'package:ottstudy/ui/screen/main_screen/account_screen.dart';
 import 'package:ottstudy/ui/screen/main_screen/explore_screen.dart';
 import 'package:ottstudy/ui/screen/main_screen/home_screen.dart';
 import 'package:ottstudy/ui/screen/main_screen/main_screen.dart';
-import 'package:ottstudy/ui/screen/tool/calculator_screen.dart';
 import 'package:ottstudy/ui/screen/tool/chat_bot_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import '../ui/screen/admin/admin_course_edit_screen.dart';
 import '../ui/screen/admin/admin_course_info_screen.dart';
 import '../ui/screen/admin/admin_home_screen.dart';
+import '../ui/screen/admin/admin_lesson_edit_screen.dart';
 import '../ui/screen/auth/forgot_password_screen.dart';
 import '../ui/screen/auth/login_screen.dart';
 import '../ui/screen/auth/reset_password_screen.dart';
@@ -21,7 +22,7 @@ import '../ui/screen/course/course_info_screen.dart';
 import '../ui/screen/course/pdf_lesson_screen.dart';
 import '../ui/screen/exam/essay_screen.dart';
 import '../ui/screen/exam/quiz_screen.dart';
-import '../ui/screen/main_screen/notification_screen.dart';
+import '../ui/screen/main_screen/chart_screen.dart';
 import '../ui/screen/screen.dart';
 
 class Routes {
@@ -35,7 +36,7 @@ class Routes {
   static const String homeScreen = "/homeScreen";
   static const String explorerScreen = "/explorerScreen";
   static const String courseInfoScreen = "/courseInfoScreen";
-  static const String notificationScreen = "/notificationScreen";
+  static const String chartScreen = "/chartScreen";
   static const String videoLessonScreen = "/videoLessonScreen";
   static const String pdfLessonScreen = "/pdfLessonScreen";
   static const String quizScreen = "/quizScreen";
@@ -45,6 +46,8 @@ class Routes {
   static const String chatBotScreen = "/chatBotScreen";
   static const String adminHomeScreen = "/adminHomeScreen";
   static const String adminCourseInfoScreen = "/adminCourseInfoScreen";
+  static const String adminCourseEditScreen = "/adminCourseEditScreen";
+  static const String adminLessonEditScreen = "/adminLessonEditScreen";
   static const String editAccountInfoScreen = "/editAccountInfoScreen";
   static const String changePasswordScreen = "/changePasswordScreen";
   static const String forgotPasswordScreen = "/forgotPasswordScreen";
@@ -81,8 +84,8 @@ class Routes {
         return PageTransition(child: HomeScreen(), type: PageTransitionType.fade);
       case explorerScreen:
         return PageTransition(child: ExploreScreen(), type: PageTransitionType.fade);
-      case notificationScreen:
-        return PageTransition(child: NotificationScreen(), type: PageTransitionType.fade);
+      case chartScreen:
+        return PageTransition(child: ChartScreen(), type: PageTransitionType.fade);
       case accountScreen:
         return PageTransition(child: AccountScreen(), type: PageTransitionType.fade);
       //Info
@@ -108,6 +111,10 @@ class Routes {
         return PageTransition(child: AdminHomeScreen(), type: PageTransitionType.fade);
       case adminCourseInfoScreen:
         return PageTransition(child: AdminCourseInfoScreen(), type: PageTransitionType.rightToLeft);
+      case adminCourseEditScreen:
+        return PageTransition(child: AdminCourseEditScreen(), type: PageTransitionType.rightToLeft);
+      case adminLessonEditScreen:
+        return PageTransition(child: AdminLessonEditScreen(), type: PageTransitionType.rightToLeft);
       //Account Info
       case editAccountInfoScreen:
         return PageTransition(child: EditAccountInfoScreen(), type: PageTransitionType.fade);
