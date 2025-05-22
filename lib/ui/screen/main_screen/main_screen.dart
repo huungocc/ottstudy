@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ottstudy/ui/screen/main_screen/account_screen.dart';
 import 'package:ottstudy/ui/screen/main_screen/explore_screen.dart';
-import 'package:ottstudy/ui/screen/main_screen/notification_screen.dart';
+import 'package:ottstudy/ui/screen/main_screen/chart_screen.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import '../../../blocs/base_bloc/navigation_tab_state.dart';
@@ -29,14 +29,14 @@ class _MainBodyState extends State<MainBody> {
   final List<IconData> _iconList = [
     Icons.home_rounded,
     Icons.explore_rounded,
-    Icons.notifications_rounded,
+    Icons.bar_chart_rounded,
     Icons.account_circle_rounded,
   ];
 
   final List<Widget> _pages = [
     HomeScreen(),
     ExploreScreen(),
-    NotificationScreen(),
+    ChartScreen(),
     AccountScreen(),
   ];
 

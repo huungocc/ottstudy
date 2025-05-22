@@ -6,14 +6,14 @@ import '../../../gen/assets.gen.dart';
 import '../../../res/colors.dart';
 import '../../widget/custom_text_label.dart';
 
-class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({super.key});
+class ChartScreen extends StatefulWidget {
+  const ChartScreen({super.key});
 
   @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
+  State<ChartScreen> createState() => _ChartScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(

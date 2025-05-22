@@ -148,8 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Assets.images.icClockWhite.image(scale: 2.2),
-            CustomTextLabel('Kiểm tra hòm thư', fontWeight: FontWeight.bold, color:
+            CustomTextLabel('100th', fontWeight: FontWeight.bold, color:
+            AppColors.white, fontSize: 30,),
+            CustomTextLabel('Thứ hạng của tôi', fontWeight: FontWeight.bold, color:
             AppColors.white, fontSize: 16,)
           ],
         ),

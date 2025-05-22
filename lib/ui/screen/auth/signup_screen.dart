@@ -18,6 +18,7 @@ import '../../../blocs/base_bloc/base_state.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../res/colors.dart';
 import '../../../util/common.dart';
+import '../../../util/constants.dart';
 import '../../../util/routes.dart';
 import '../../widget/widget.dart';
 
@@ -376,13 +377,7 @@ class _SignupBodyState extends State<SignupBody> {
                 ),
                 hintText: "Lớp",
                 isDropdownTF: true,
-                dropdownItems: [
-                  DropdownItem(id: 1, value: 'Lớp 1'),
-                  DropdownItem(id: 2, value: 'Lớp 2'),
-                  DropdownItem(id: 3, value: 'Lớp 3'),
-                  DropdownItem(id: 4, value: 'Lớp 4'),
-                  DropdownItem(id: 5, value: 'Lớp 5')
-                ],
+                dropdownItems: Constants.grades
               ),
               BlocListener<UploadFileCubit, BaseState>(
                 listener: (_, state) {

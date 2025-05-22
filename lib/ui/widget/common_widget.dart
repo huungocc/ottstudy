@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/models/lesson_model.dart';
+import '../../data/models/question_model.dart';
+import '../../data/models/test_model.dart';
 import '../../res/colors.dart';
 import 'base_network_image.dart';
 import 'widget.dart';
@@ -91,24 +94,32 @@ class CommonWidget {
     );
   }
 
-  static Widget lessonInfo({GestureTapCallback? onTap}) {
+  static Widget lessonInfo(LessonModel? model, {int? order, GestureTapCallback? onTap, double? borderRadius}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(15),
-        color: AppColors.white,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(borderRadius ?? 0),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomTextLabel('01', gradient: AppColors.base_gradient_2, fontWeight: FontWeight.bold, fontSize: 25,),
+            CustomTextLabel(
+              order != null ? order < 10 ? '0$order' : '$order' : '',
+              gradient: AppColors.base_gradient_2,
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+            ),
             SizedBox(width: 10,),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextLabel('100 bài toán đầu tiên cộng trừ đơn giản giúp bé làm quen với môn toán'),
+                  CustomTextLabel(model?.lessonName ?? ''),
                   SizedBox(height: 10,),
-                  courseInfo(iconData: Icons.play_arrow_rounded, info: 'Video')
+                  courseInfo(iconData: Icons.play_arrow_rounded, info: model?.fileType ?? '')
                 ],
               )
             )
@@ -118,13 +129,14 @@ class CommonWidget {
     );
   }
 
-  static Widget examInfo({GestureTapCallback? onTap}) {
+  static Widget examInfo({GestureTapCallback? onTap, double? borderRadius}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
-          gradient: AppColors.base_gradient_2
+          gradient: AppColors.base_gradient_2,
+          borderRadius: BorderRadius.circular(borderRadius ?? 0),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,8 +150,6 @@ class CommonWidget {
                   const CustomTextLabel('Bài kiểm tra kết thúc khóa học', color: AppColors.white,),
                   const SizedBox(height: 10,),
                   courseInfo(iconData: Icons.play_arrow_rounded, info: '60p', color: AppColors.white),
-                  const SizedBox(height: 5,),
-                  courseInfo(iconData: Icons.menu_book_rounded, info: 'Trắc nghiệm', color: AppColors.white)
                 ],
               )
             )
@@ -362,15 +372,157 @@ class CommonWidget {
                 CustomTextLabel(9.4, fontWeight: FontWeight.bold,)
               ],
             )
-            : Column(
-              children: [
-                CustomTextLabel('Đang học'),
-                SizedBox(height: 5,),
-                CustomTextLabel('5/10', fontWeight: FontWeight.bold,)
-              ],
+            : const SizedBox.shrink()
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget addButton({String? title, GestureTapCallback? onTap}) {
+    return BaseButton(
+      onTap: onTap,
+      gradient: AppColors.base_gradient_2,
+      borderRadius: 20,
+      width: 150,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomTextLabel(
+            title,
+            color: AppColors.white,
+          ),
+          const Icon(Icons.add_rounded, color: Colors.white),
+        ],
+      ),
+    );
+  }
+
+  static Widget questionInfo(QuestionModel questionModel, {int? order, GestureTapCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextLabel(order != null ? order < 10 ? '0$order' : '$order' : '', gradient: AppColors.base_gradient_2, fontWeight: FontWeight.bold, fontSize: 25,),
+            SizedBox(width: 10,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseNetworkImage(
+                    url: questionModel.questionImage,
+                    isFromDatabase: true,
+                  ),
+                  SizedBox(height: 10,),
+                  CustomTextLabel('Đáp án: ${questionModel.answer}', fontSize: 12, color: AppColors.gray_title)
+                ],
+              )
             )
           ],
         ),
+      ),
+    );
+  }
+
+  static Widget studentInfo({required bool isApproving}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      decoration: const BoxDecoration(
+        color: AppColors.background_white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          BaseNetworkImage(
+            url: 'https://toquoc.mediacdn.vn/280518851207290880/2022/12/15/p0dnxrcv-16710704848821827978943.jpg',
+            height: 100,
+            width: 100,
+            boxFit: BoxFit.cover,
+            borderRadius: 50,
+          ),
+          SizedBox(height: 20,),
+          studentInfoText(
+            title: 'Mã học sinh',
+            value: 'HS102',
+          ),
+          studentInfoText(
+            title: 'Họ và tên',
+            value: 'Nguyễn Hữu Ngọc',
+          ),
+          studentInfoText(
+            title: 'Ngày sinh',
+            value: '03/10/2003',
+          ),
+          studentInfoText(
+            title: 'Số điện thoại',
+            value: '0362335820',
+          ),
+          studentInfoText(
+            title: 'Lớp',
+            value: '5',
+          ),
+          Visibility(
+            visible: isApproving,
+            child: BaseButton(
+              title: 'Phê duyệt',
+              borderRadius: 20,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget studentInfoText({required String title, required String value}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          CustomTextLabel('$title:', fontWeight: FontWeight.bold,),
+          SizedBox(width: 20,),
+          CustomTextLabel(value)
+        ],
+      ),
+    );
+  }
+
+  static Widget testInfo(TestModel testModel) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20),
+      decoration: const BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          studentInfoText(
+            title: 'Id',
+            value: testModel.id ?? '',
+          ),
+          studentInfoText(
+            title: 'Thời gian',
+            value: '${testModel.time} p',
+          ),
+          studentInfoText(
+            title: 'Điểm yêu cầu',
+            value: testModel.minimumScore.toString(),
+          ),
+        ],
       ),
     );
   }

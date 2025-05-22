@@ -46,46 +46,6 @@ class _AccountBodyState extends State<AccountBody> {
     context.read<UserInfoCubit>().getUserInfo(null);
   }
 
-  void onEdit() async {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: PhosphorIcon(PhosphorIcons.info()),
-                title: const CustomTextLabel(
-                  'Cập nhật thông tin cá nhân',
-                  fontWeight: FontWeight.bold,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context, Routes.editAccountInfoScreen);
-                },
-              ),
-              ListTile(
-                leading: PhosphorIcon(PhosphorIcons.password()),
-                title: const CustomTextLabel(
-                  'Cập nhật mật khẩu',
-                  fontWeight: FontWeight.bold,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context, Routes.changePasswordScreen);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
@@ -134,24 +94,16 @@ class _AccountBodyState extends State<AccountBody> {
                           )
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     CustomTextLabel(userModel?.fullName ?? 'Người dùng không xác định', fontWeight: FontWeight.w600,
                       fontSize:
                     16,
                       color:
                     AppColors
                         .white,),
-                    SizedBox(height: 5,),
+                    const SizedBox(height: 5,),
                     CustomTextLabel(userModel?.studentCode ?? 'Không xác định', color: AppColors.white,),
-                    IconButton(
-                      icon: PhosphorIcon(
-                        PhosphorIcons.pencilSimpleLine(),
-                        color: AppColors.white,
-                      ),
-                      onPressed: () {
-                        onEdit();
-                      },
-                    ),
+                    const SizedBox(height: 20,),
                   ],
                 ),
                 Expanded(
@@ -167,14 +119,43 @@ class _AccountBodyState extends State<AccountBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(child: dashBoardCard(title: 'Tổng khóa học', value: '100')),
-                            const SizedBox(width: 20,),
-                            Expanded(child: dashBoardCard(title: 'Tổng giờ học', value: '100'))
-                          ],
+                        const SizedBox(height: 10,),
+                        const CustomTextLabel('Cài đặt', fontWeight: FontWeight.bold,),
+                        const SizedBox(height: 10,),
+                        BaseButton(
+                          borderRadius: 20,
+                          backgroundColor: AppColors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const CustomTextLabel('Thông tin cá nhân'),
+                              PhosphorIcon(
+                                PhosphorIcons.user(),
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.editAccountInfoScreen);
+                          },
                         ),
-                        const SizedBox(height: 20,),
+                        const SizedBox(height: 10,),
+                        BaseButton(
+                          borderRadius: 20,
+                          backgroundColor: AppColors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const CustomTextLabel('Đổi mật khẩu'),
+                              PhosphorIcon(
+                                PhosphorIcons.password(),
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.changePasswordScreen);
+                          },
+                        ),
+                        const SizedBox(height: 40,),
                         const CustomTextLabel('Công cụ', fontWeight: FontWeight.bold,),
                         const SizedBox(height: 10,),
                         BaseButton(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ottstudy/blocs/course/list_course_cubit.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:ottstudy/ui/widget/base_text_input.dart';
 import 'package:ottstudy/ui/widget/common_widget.dart';
@@ -9,14 +11,27 @@ import '../../../gen/assets.gen.dart';
 import '../../../res/colors.dart';
 import '../../../util/routes.dart';
 
-class ExploreScreen extends StatefulWidget {
+class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
 
   @override
-  State<ExploreScreen> createState() => _ExploreScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ListCourseCubit(),
+      child: ExploreBody(),
+    );
+  }
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
+
+class ExploreBody extends StatefulWidget {
+  const ExploreBody({super.key});
+
+  @override
+  State<ExploreBody> createState() => _ExploreBodyState();
+}
+
+class _ExploreBodyState extends State<ExploreBody> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
