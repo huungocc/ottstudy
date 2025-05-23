@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/models/course_model.dart';
 import '../../data/models/lesson_model.dart';
 import '../../data/models/question_model.dart';
 import '../../data/models/test_model.dart';
@@ -9,8 +10,7 @@ import 'base_network_image.dart';
 import 'widget.dart';
 
 class CommonWidget {
-  static Widget explorerCourseCard({String? url, String? courseName, String? teacherName, String? className,
-    EdgeInsets? margin, GestureTapCallback? onTap
+  static Widget explorerCourseCard(CourseModel model, {EdgeInsets? margin, GestureTapCallback? onTap
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -26,29 +26,25 @@ class CommonWidget {
             Flexible(
               flex: 1,
               child: BaseNetworkImage(
-                url: url ?? '',
+                url: model.courseImage ?? '',
                 width: 90,
                 height: 90,
                 borderRadius: 15,
+                isFromDatabase: true,
               ),
             ),
-            SizedBox(width: 15,),
+            const SizedBox(width: 15,),
             Flexible(
               flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextLabel(courseName, fontSize: 16,),
-                  SizedBox(height: 5,),
+                  CustomTextLabel(model.courseName, fontSize: 16,),
+                  const SizedBox(height: 10),
                   courseInfo(
                     iconData: Icons.person_2_rounded,
-                    info: teacherName ?? ''
+                    info: model.teacher ?? ''
                   ),
-                  SizedBox(height: 5,),
-                  courseInfo(
-                      iconData: Icons.menu_book_rounded,
-                      info: className ?? ''
-                  )
                 ],
               ),
             )
@@ -285,8 +281,7 @@ class CommonWidget {
     );
   }
 
-  static Widget adminCourseCard({String? url, String? courseName, int? studentNumber,
-    EdgeInsets? margin, GestureTapCallback? onTap
+  static Widget adminCourseCard(CourseModel model, {EdgeInsets? margin, GestureTapCallback? onTap
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -302,10 +297,11 @@ class CommonWidget {
             Flexible(
               flex: 1,
               child: BaseNetworkImage(
-                url: url ?? '',
+                url: model.courseImage ?? '',
                 width: 90,
                 height: 90,
                 borderRadius: 15,
+                isFromDatabase: true,
               ),
             ),
             SizedBox(width: 15,),
@@ -314,11 +310,11 @@ class CommonWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextLabel(courseName, fontSize: 16,),
+                  CustomTextLabel(model.courseName ?? '', fontSize: 16,),
                   SizedBox(height: 5,),
                   courseInfo(
                       iconData: Icons.person_2_rounded,
-                      info: '$studentNumber học sinh'
+                      info: '${model.studentCount} học sinh'
                   ),
                 ],
               ),
