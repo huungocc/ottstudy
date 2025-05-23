@@ -3,9 +3,16 @@ import 'package:ottstudy/ui/widget/custom_text_label.dart';
 
 import '../../res/colors.dart';
 
+class SelectorItem {
+  final String id;
+  final String name;
+
+  SelectorItem({required this.id, required this.name});
+}
+
 class CustomSelector extends StatefulWidget {
-  final List<String> items;
-  final Function(int) onTap;
+  final List<SelectorItem> items;
+  final Function(String id, int index) onTap;
   final int initialSelectedIndex;
 
   const CustomSelector({
@@ -21,11 +28,20 @@ class CustomSelector extends StatefulWidget {
 
 class _CustomSelectorState extends State<CustomSelector> {
   late int _selectedIndex;
+  late List<SelectorItem> _displayItems;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialSelectedIndex;
+    _setupDisplayItems();
+  }
+
+  void _setupDisplayItems() {
+    _displayItems = [];
+
+    // Thêm các item từ widget
+    _displayItems.addAll(widget.items);
   }
 
   @override
@@ -36,7 +52,7 @@ class _CustomSelectorState extends State<CustomSelector> {
         height: 50,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: widget.items.length,
+          itemCount: _displayItems.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(right: 12.0),
@@ -45,7 +61,7 @@ class _CustomSelectorState extends State<CustomSelector> {
                   setState(() {
                     _selectedIndex = index;
                   });
-                  widget.onTap(index);
+                  widget.onTap(_displayItems[index].id, index);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -65,7 +81,7 @@ class _CustomSelectorState extends State<CustomSelector> {
                   ),
                   child: Center(
                     child: CustomTextLabel(
-                      widget.items[index],
+                      _displayItems[index].name,
                       color: _selectedIndex == index ? AppColors.white : AppColors.black,
                       fontWeight: FontWeight.w500,
                     ),

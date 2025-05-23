@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import '../ui/widget/base_text_input.dart';
+import '../ui/widget/custom_selector.dart';
 
 class Constants {
   static const String VI = "vi";
@@ -36,6 +37,21 @@ class Constants {
     DropdownItem(id: 2, value: 'B'),
     DropdownItem(id: 3, value: 'C'),
     DropdownItem(id: 4, value: 'D'),
+  ];
+
+  static List<SelectorItem> subjectFilter = [
+    SelectorItem(name: 'Tất cả', id: ''),
+    SelectorItem(name: 'Tiếng Việt', id: 'vietnamese'),
+    SelectorItem(name: 'Toán', id: 'math'),
+    SelectorItem(name: 'Đạo đức', id: 'morality'),
+    SelectorItem(name: 'Tự nhiên và Xã hội', id: 'science_and_society'),
+    SelectorItem(name: 'Khoa học', id: 'science'),
+    SelectorItem(name: 'Lịch sử và Địa lý', id: 'history_and_geography'),
+    SelectorItem(name: 'Tin học và Công nghệ', id: 'ict_and_technology'),
+    SelectorItem(name: 'Giáo dục thể chất', id: 'physical_education'),
+    SelectorItem(name: 'Âm nhạc', id: 'music'),
+    SelectorItem(name: 'Mỹ thuật', id: 'arts'),
+    SelectorItem(name: 'Tiếng Anh', id: 'english'),
   ];
 }
 

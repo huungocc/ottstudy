@@ -213,4 +213,18 @@ class Common {
       builder: (context) => const CalculatorScreen(),
     );
   }
+
+  static List<List<T>> chunksListWithSize<T>(List<T> list, {int chunkSize = 20}) {
+    List<List<T>> chunks = [];
+    if (list.isEmpty) {
+      return chunks;
+    }
+    if (chunkSize <= 0) {
+      return [list];
+    }
+    for (var i = 0; i < list.length; i += chunkSize) {
+      chunks.add(list.sublist(i, i + chunkSize > list.length ? list.length : i + chunkSize));
+    }
+    return chunks;
+  }
 }
