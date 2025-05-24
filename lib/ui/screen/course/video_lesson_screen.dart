@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ottstudy/blocs/base_bloc/base.dart';
+import 'package:ottstudy/data/models/test_model.dart';
 import 'package:ottstudy/ui/widget/base_network_video_player.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:ottstudy/ui/widget/common_widget.dart';
@@ -54,6 +55,8 @@ class _VideoLessonBodyState extends State<VideoLessonBody> {
     return BaseScreen(
       colorBackground: AppColors.background_white,
       body: RefreshIndicator(
+        color: AppColors.black,
+        backgroundColor: AppColors.white,
         onRefresh: () async => getData(),
         child: BlocBuilder<LessonInfoCubit, BaseState>(
           builder: (_, state) {
@@ -77,7 +80,9 @@ class _VideoLessonBodyState extends State<VideoLessonBody> {
                         const SizedBox(height: 20,),
                         CommonWidget.doExerciseButton(
                           onTap: () {
-                            Navigator.pushNamed(context, Routes.quizScreen);
+                            Navigator.pushNamed(context, Routes.quizScreen, arguments: TestModel(
+                              id: lessonModel.testId
+                            ));
                           }
                         ),
                       ],

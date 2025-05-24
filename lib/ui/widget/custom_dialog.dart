@@ -6,6 +6,7 @@ import 'widget.dart';
 
 class CustomDialog extends StatelessWidget {
   final Function? onSubmit;
+  final Function? onClose;
   final String titleSubmit;
   //final Widget? image;
   final dynamic content;
@@ -15,6 +16,7 @@ class CustomDialog extends StatelessWidget {
   const CustomDialog({
     Key? key,
     this.onSubmit,
+    this.onClose,
     this.titleSubmit = "Ok",
     //this.image,
     this.content,
@@ -48,6 +50,7 @@ class CustomDialog extends StatelessWidget {
                         icon: Icon(Icons.close_rounded),
                         onPressed: () {
                           Navigator.of(context).pop();
+                          onClose?.call();
                         }
                       ),
                     ),

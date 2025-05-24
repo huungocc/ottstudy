@@ -1,4 +1,3 @@
-// essay_cubit.dart
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'base_bloc/timer_state.dart';
@@ -37,6 +36,14 @@ class TimerCubit extends Cubit<TimerState> {
 
   void setTotalTime(int seconds) {
     emit(state.copyWith(totalTime: seconds, timeLeft: seconds, isTimeUp: false));
+  }
+
+  void updateTimer(int newTime) {
+    emit(state.copyWith(
+      totalTime: newTime,
+      timeLeft: newTime,
+      isTimeUp: false,
+    ));
   }
 
   @override

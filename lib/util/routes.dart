@@ -13,6 +13,7 @@ import 'package:ottstudy/ui/screen/main_screen/main_screen.dart';
 import 'package:ottstudy/ui/screen/tool/chat_bot_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import '../data/models/course_model.dart';
+import '../data/models/test_model.dart';
 import '../ui/screen/admin/admin_course_edit_screen.dart';
 import '../ui/screen/admin/admin_course_info_screen.dart';
 import '../ui/screen/admin/admin_home_screen.dart';
@@ -116,20 +117,29 @@ class Routes {
             ),
             type: PageTransitionType.rightToLeft
         );
-      // case pdfLessonScreen:
-      //   LessonModel? arg;
-      //   if (settings.arguments is LessonModel) {
-      //     arg = settings.arguments as LessonModel;
-      //   }
-      //   return PageTransition(
-      //       child: PdfLessonScreen(
-      //           arg: arg
-      //       ),
-      //       type: PageTransitionType.rightToLeft
-      //   );
+      case pdfLessonScreen:
+        LessonModel? arg;
+        if (settings.arguments is LessonModel) {
+          arg = settings.arguments as LessonModel;
+        }
+        return PageTransition(
+            child: PdfLessonScreen(
+                arg: arg
+            ),
+            type: PageTransitionType.rightToLeft
+        );
       //Exam
       case quizScreen:
-        return PageTransition(child: QuizScreen(), type: PageTransitionType.rightToLeft);
+        TestModel? arg;
+        if (settings.arguments is TestModel) {
+          arg = settings.arguments as TestModel;
+        }
+        return PageTransition(
+            child: QuizScreen(
+                arg: arg
+            ),
+            type: PageTransitionType.rightToLeft
+        );
       case essayScreen:
         return PageTransition(child: EssayScreen(), type: PageTransitionType.rightToLeft);
       //Tool
