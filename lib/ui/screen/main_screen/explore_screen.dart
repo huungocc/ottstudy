@@ -163,7 +163,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                             child: CommonWidget.explorerCourseCard(
                               course,
                               onTap: () {
-                                Navigator.pushNamed(context, Routes.courseInfoScreen);
+                                Navigator.pushNamed(context, Routes.courseInfoScreen, arguments: course);
                               },
                             ),
                           );

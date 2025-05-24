@@ -7,28 +7,27 @@ import '../../data/network/api_response.dart';
 import '../../data/network/network_impl.dart';
 import '../utils.dart';
 
-class ListCourseCubit extends Cubit<BaseState> {
-  ListCourseCubit() : super(InitState());
+class CourseInfoCubit extends Cubit<BaseState> {
+  CourseInfoCubit() : super(InitState());
 
-  Future<void> getListCourse(Map<String, dynamic>? params) async {
+  Future<void> courseInfo(Map<String, dynamic> param) async {
     try {
       emit(LoadingState());
 
       ApiResponse response = await Network().get(
-        url: ApiConstant.listCourse,
-        params: params,
+        url: ApiConstant.courseInfo,
+        params: param,
       );
 
       if (response.isSuccess) {
-        final List<CourseModel> courseList = (response.data as List)
-            .map((item) => CourseModel.fromJson(item as Map<String, dynamic>))
-            .toList();
+        final CourseModel courseModel = CourseModel.fromJson(response.data);
 
-        emit(LoadedState<List<CourseModel>>(courseList));
+        emit(LoadedState<CourseModel>(courseModel));
       } else {
         emit(ErrorState(response.errMessage ?? "Đã có lỗi xảy ra"));
       }
     } catch (e) {
+      print(e);
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }

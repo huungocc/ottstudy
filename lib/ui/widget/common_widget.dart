@@ -6,6 +6,7 @@ import '../../data/models/lesson_model.dart';
 import '../../data/models/question_model.dart';
 import '../../data/models/test_model.dart';
 import '../../res/colors.dart';
+import '../../util/constants.dart';
 import 'base_network_image.dart';
 import 'widget.dart';
 
@@ -54,12 +55,10 @@ class CommonWidget {
     );
   }
 
-  static Widget courseInfo_4() {
+  static Widget courseInfo_2({int? studentCount, String? subjectId}) {
     List<Map<String, dynamic>> courseInfos = [
-      {'icon': Icons.play_arrow_rounded, 'info': '12 bài học'},
-      {'icon': Icons.person_2_rounded, 'info': '100 học sinh'},
-      {'icon': Icons.menu_book_rounded, 'info': 'Môn toán'},
-      {'icon': Icons.emoji_emotions, 'info': '100 lượt thích'},
+      {'icon': Icons.person_2_rounded, 'info': '${studentCount ?? '0'} học sinh'},
+      {'icon': Icons.menu_book_rounded, 'info': 'Môn ${Constants.getSubjectNameById(subjectId ?? '')}'},
     ];
     return GridView.builder(
       shrinkWrap: true,
@@ -90,7 +89,7 @@ class CommonWidget {
     );
   }
 
-  static Widget lessonInfo(LessonModel? model, {int? order, GestureTapCallback? onTap, double? borderRadius}) {
+  static Widget lessonInfo(LessonModel model, {int? order, GestureTapCallback? onTap, double? borderRadius}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -113,9 +112,9 @@ class CommonWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextLabel(model?.lessonName ?? ''),
+                  CustomTextLabel(model.lessonName ?? ''),
                   SizedBox(height: 10,),
-                  courseInfo(iconData: Icons.play_arrow_rounded, info: model?.fileType ?? '')
+                  courseInfo(iconData: Icons.play_arrow_rounded, info: model.fileType ?? '')
                 ],
               )
             )
@@ -125,7 +124,7 @@ class CommonWidget {
     );
   }
 
-  static Widget examInfo({GestureTapCallback? onTap, double? borderRadius}) {
+  static Widget examInfo(TestModel model, {GestureTapCallback? onTap, double? borderRadius}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -145,7 +144,7 @@ class CommonWidget {
                 children: [
                   const CustomTextLabel('Bài kiểm tra kết thúc khóa học', color: AppColors.white,),
                   const SizedBox(height: 10,),
-                  courseInfo(iconData: Icons.play_arrow_rounded, info: '60p', color: AppColors.white),
+                  courseInfo(iconData: Icons.play_arrow_rounded, info: '${model.time} p', color: AppColors.white),
                 ],
               )
             )

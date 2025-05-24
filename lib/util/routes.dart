@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ottstudy/data/models/forgot_password_model.dart';
+import 'package:ottstudy/data/models/lesson_model.dart';
 import 'package:ottstudy/ui/screen/auth/signup_screen.dart';
 import 'package:ottstudy/ui/screen/course/my_course_screen.dart';
 import 'package:ottstudy/ui/screen/course/video_lesson_screen.dart';
@@ -11,6 +12,7 @@ import 'package:ottstudy/ui/screen/main_screen/home_screen.dart';
 import 'package:ottstudy/ui/screen/main_screen/main_screen.dart';
 import 'package:ottstudy/ui/screen/tool/chat_bot_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import '../data/models/course_model.dart';
 import '../ui/screen/admin/admin_course_edit_screen.dart';
 import '../ui/screen/admin/admin_course_info_screen.dart';
 import '../ui/screen/admin/admin_home_screen.dart';
@@ -75,7 +77,7 @@ class Routes {
           child: ResetPasswordScreen(
             arg: arg
           ),
-          type: PageTransitionType.fade
+          type: PageTransitionType.rightToLeft
         );
       //Main
       case mainScreen:
@@ -90,14 +92,41 @@ class Routes {
         return PageTransition(child: AccountScreen(), type: PageTransitionType.fade);
       //Info
       case courseInfoScreen:
-        return PageTransition(child: CourseInfoScreen(), type: PageTransitionType.rightToLeft);
+        CourseModel? arg;
+        if (settings.arguments is CourseModel) {
+          arg = settings.arguments as CourseModel;
+        }
+        return PageTransition(
+            child: CourseInfoScreen(
+                arg: arg
+            ),
+            type: PageTransitionType.fade
+        );
       case myCourseScreen:
         return PageTransition(child: MyCourseScreen(), type: PageTransitionType.rightToLeft);
       //Lesson
       case videoLessonScreen:
-        return PageTransition(child: VideoLessonScreen(), type: PageTransitionType.rightToLeft);
-      case pdfLessonScreen:
-        return PageTransition(child: PdfLessonScreen(), type: PageTransitionType.rightToLeft);
+        LessonModel? arg;
+        if (settings.arguments is LessonModel) {
+          arg = settings.arguments as LessonModel;
+        }
+        return PageTransition(
+            child: VideoLessonScreen(
+                arg: arg
+            ),
+            type: PageTransitionType.rightToLeft
+        );
+      // case pdfLessonScreen:
+      //   LessonModel? arg;
+      //   if (settings.arguments is LessonModel) {
+      //     arg = settings.arguments as LessonModel;
+      //   }
+      //   return PageTransition(
+      //       child: PdfLessonScreen(
+      //           arg: arg
+      //       ),
+      //       type: PageTransitionType.rightToLeft
+      //   );
       //Exam
       case quizScreen:
         return PageTransition(child: QuizScreen(), type: PageTransitionType.rightToLeft);

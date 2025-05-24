@@ -30,5 +30,4 @@ class CreateCourseCubit extends Cubit<BaseState> {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
-
 }
