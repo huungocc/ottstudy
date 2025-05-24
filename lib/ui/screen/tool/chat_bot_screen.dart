@@ -1,13 +1,17 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ottstudy/data/models/chat_bot_message_model.dart';
 import 'package:ottstudy/ui/widget/base_button.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:ottstudy/res/colors.dart';
 import 'package:ottstudy/ui/widget/base_text_input.dart';
 import 'package:ottstudy/ui/widget/custom_text_label.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../blocs/base_bloc/chat_bot_state.dart';
 import '../../../blocs/chat_bot_cubit.dart';
+import '../../widget/custom_snack_bar.dart';
 
 class ChatBotScreen extends StatelessWidget {
   const ChatBotScreen({super.key});
@@ -31,6 +35,8 @@ class ChatBotBody extends StatefulWidget {
 class _ChatBotBodyState extends State<ChatBotBody> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  File? _image;
+  final picker = ImagePicker();
 
   @override
   void dispose() {
@@ -48,6 +54,80 @@ class _ChatBotBodyState extends State<ChatBotBody> {
           curve: Curves.easeOut,
         );
       }
+    });
+  }
+
+  Future showPickImageOptions() async {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt_outlined),
+                title: const CustomTextLabel(
+                  'Camera',
+                  fontWeight: FontWeight.bold,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  getImageFromCamera();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.image_outlined),
+                title: const CustomTextLabel(
+                  'Thư viện',
+                  fontWeight: FontWeight.bold,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  pickImagesFromGallery();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future pickImagesFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future getImageFromCamera() async {
+    var status = await Permission.camera.status;
+
+    if (status.isDenied) {
+      status = await Permission.camera.request();
+    }
+
+    if (status.isGranted) {
+      final pickedFile = await picker.pickImage(source: ImageSource.camera);
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+      }
+    } else if (status.isPermanentlyDenied) {
+      CustomSnackBar.showMessage(context, mess: "Quyền truy cập camera bị từ chối");
+    }
+  }
+
+  void _removeSelectedImage() {
+    setState(() {
+      _image = null;
     });
   }
 
@@ -79,9 +159,55 @@ class _ChatBotBodyState extends State<ChatBotBody> {
                 },
               ),
             ),
+            // Preview selected image
+            if (_image != null) Align(alignment: Alignment.centerLeft, child: _buildImagePreview()),
             _buildInputField()
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildImagePreview() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Stack(
+        children: [
+          Container(
+            height: 100,
+            width: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.gray.withOpacity(0.3)),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                _image!,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Positioned(
+            top: -8,
+            right: -8,
+            child: IconButton(
+              onPressed: _removeSelectedImage,
+              icon: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -102,18 +228,37 @@ class _ChatBotBodyState extends State<ChatBotBody> {
           gradient: message.isUser ? AppColors.base_gradient_1 : null,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: message.isLoading
-            ? const SizedBox(
-          height: 20,
-          width: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: AppColors.base_pink,
-          ),
-        )
-            : CustomTextLabel(
-          message.content,
-          color: message.isUser ? Colors.white : Colors.black87,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Display image if exists
+            if (message.hasImage && message.imageFile != null)
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    message.imageFile!,
+                    fit: BoxFit.cover,
+                    height: 150,
+                  ),
+                ),
+              ),
+            // Display loading or text content
+            message.isLoading
+                ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.base_pink,
+              ),
+            )
+                : CustomTextLabel(
+              message.content,
+              color: message.isUser ? Colors.white : Colors.black87,
+            ),
+          ],
         ),
       ),
     );
@@ -137,10 +282,11 @@ class _ChatBotBodyState extends State<ChatBotBody> {
               borderRadius: BorderRadius.circular(20),
             ),
             suffixIcon: IconButton(
-              onPressed: () {
-
-              },
-              icon: Icon(Icons.image_outlined),
+              onPressed: showPickImageOptions,
+              icon: Icon(
+                Icons.image_outlined,
+                color: _image != null ? AppColors.base_pink : AppColors.gray,
+              ),
             ),
             suffixIconMargin: 0,
           ),
@@ -153,9 +299,13 @@ class _ChatBotBodyState extends State<ChatBotBody> {
                   ? null
                   : () {
                 final message = _messageController.text.trim();
-                if (message.isNotEmpty) {
-                  context.read<ChatBotCubit>().sendMessage(message);
+                if (message.isNotEmpty || _image != null) {
+                  context.read<ChatBotCubit>().sendMessage(
+                    message,
+                    imageFile: _image,
+                  );
                   _messageController.clear();
+                  _removeSelectedImage();
                 }
               },
               title: 'Gửi',

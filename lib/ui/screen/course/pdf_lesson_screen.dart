@@ -6,7 +6,9 @@ import 'package:ottstudy/ui/widget/common_widget.dart';
 import '../../../blocs/base_bloc/base_state.dart';
 import '../../../blocs/lesson/lesson_info_cubit.dart';
 import '../../../data/models/lesson_model.dart';
+import '../../../data/models/test_model.dart';
 import '../../../res/colors.dart';
+import '../../../util/routes.dart';
 import '../../widget/base_pdf_viewer.dart';
 
 class PdfLessonScreen extends StatelessWidget {
@@ -18,7 +20,7 @@ class PdfLessonScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => LessonInfoCubit(),
-      child: PdfLessonScreen(arg: arg,),
+      child: PdfLessonBody(arg: arg), // Fixed: Use PdfLessonBody instead of PdfLessonScreen
     );
   }
 }
@@ -33,6 +35,8 @@ class PdfLessonBody extends StatefulWidget {
 }
 
 class _PdfLessonBodyState extends State<PdfLessonBody> {
+  LessonModel lessonModel = LessonModel();
+
   @override
   void initState() {
     super.initState();
@@ -51,25 +55,35 @@ class _PdfLessonBodyState extends State<PdfLessonBody> {
   Widget build(BuildContext context) {
     return BaseScreen(
       colorBackground: AppColors.white,
-      body: BlocBuilder<LessonInfoCubit, BaseState>(
-        builder: (_, state) {
-          if (state is LoadedState<LessonModel>) {
-            final lessonModel = state.data;
-            return BasePDFViewer(
-              sourceType: PDFViewSource.network,
-              source: lessonModel.fileUrl ?? '',
-              isFromDatabase: true,
-            );
-          }
-          return const SizedBox.shrink();
-        }
+      body: RefreshIndicator(
+        color: AppColors.black,
+        backgroundColor: AppColors.white,
+        onRefresh: () async => getData(),
+        child: BlocBuilder<LessonInfoCubit, BaseState>(
+            builder: (_, state) {
+              if (state is LoadedState<LessonModel>) {
+                lessonModel = state.data;
+                return BasePDFViewer(
+                  sourceType: PDFViewSource.network,
+                  source: lessonModel.fileUrl ?? '',
+                  isFromDatabase: true,
+                );
+              }
+              return const SizedBox.shrink();
+            }
+        ),
       ),
       bottomBar: BottomAppBar(
         height: 70,
         color: AppColors.background_white,
-        child: CommonWidget.doExerciseButton(),
+        child: CommonWidget.doExerciseButton(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.quizScreen, arguments: TestModel(
+                  id: lessonModel.testId
+              ));
+            }
+        ),
       ),
     );
   }
 }
-

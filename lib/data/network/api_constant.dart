@@ -35,6 +35,7 @@ class ApiConstant {
 
   //Question
   static final createQuestion = "admin/create/question";
+  static final listQuestion = "question/list";
 
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";

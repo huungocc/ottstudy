@@ -159,8 +159,7 @@ class _CourseInfoBodyState extends State<CourseInfoBody> {
                           return CommonWidget.examInfo(
                             testModel,
                             onTap: () {
-                              Navigator.pushNamed(context, Routes.quizScreen);
-                              //Navigator.pushNamed(context, Routes.essayScreen);
+                              Navigator.pushNamed(context, Routes.quizScreen, arguments: testModel);
                             }
                           );
                         }
