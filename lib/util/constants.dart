@@ -53,6 +53,14 @@ class Constants {
     SelectorItem(name: 'Mỹ thuật', id: 'arts'),
     SelectorItem(name: 'Tiếng Anh', id: 'english'),
   ];
+
+  static String getSubjectNameById(String id) {
+    final item = subjectFilter.firstWhere(
+          (element) => element.id == id,
+      orElse: () => SelectorItem(name: 'Không xác định', id: ''),
+    );
+    return item.name;
+  }
 }
 
 class FormatDate {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'base_progress_indicator.dart';
 
@@ -8,7 +9,7 @@ import 'base_progress_indicator.dart';
 /// để phát video từ mạng với giao diện điều khiển đầy đủ
 class BaseNetworkVideoPlayer extends StatefulWidget {
   /// URL của video cần phát
-  final String videoUrl;
+  final String? videoUrl;
 
   /// Tỉ lệ khung hình (mặc định là 16:9)
   final double aspectRatio;
@@ -28,6 +29,9 @@ class BaseNetworkVideoPlayer extends StatefulWidget {
   /// Callback khi video kết thúc
   final VoidCallback? onVideoEnded;
 
+  /// URL có phải từ database không (cần thêm API_URL prefix)
+  final bool? isFromDatabase;
+
   const BaseNetworkVideoPlayer({
     Key? key,
     required this.videoUrl,
@@ -37,6 +41,7 @@ class BaseNetworkVideoPlayer extends StatefulWidget {
     this.showControls = true,
     this.title,
     this.onVideoEnded,
+    this.isFromDatabase = false,
   }) : super(key: key);
 
   @override
@@ -58,7 +63,8 @@ class _BaseNetworkVideoPlayerState extends State<BaseNetworkVideoPlayer> {
   @override
   void didUpdateWidget(BaseNetworkVideoPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.videoUrl != widget.videoUrl) {
+    if (oldWidget.videoUrl != widget.videoUrl ||
+        oldWidget.isFromDatabase != widget.isFromDatabase) {
       _disposeControllers();
       _initializePlayer();
     }
@@ -75,8 +81,20 @@ class _BaseNetworkVideoPlayerState extends State<BaseNetworkVideoPlayer> {
     _chewieController?.dispose();
   }
 
+  String trimTrailingSlash(String input) {
+    return input.endsWith('/') ? input.substring(0, input.length - 1) : input;
+  }
+
+  String _buildVideoUrl() {
+    if (widget.isFromDatabase == true) {
+      return '${trimTrailingSlash(dotenv.env['API_URL'] ?? '')}${widget.videoUrl}';
+    }
+    return widget.videoUrl ?? '';
+  }
+
   Future<void> _initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+    final String finalVideoUrl = _buildVideoUrl();
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(finalVideoUrl));
 
     try {
       await _videoPlayerController.initialize();
@@ -183,106 +201,6 @@ class _BaseNetworkVideoPlayerState extends State<BaseNetworkVideoPlayer> {
     return AspectRatio(
       aspectRatio: widget.aspectRatio,
       child: Chewie(controller: _chewieController!),
-    );
-  }
-}
-
-/// Một video player hỗ trợ lựa chọn chất lượng video
-class AdaptiveQualityVideoPlayer extends StatefulWidget {
-  /// Map của các chất lượng video và URL tương ứng
-  final Map<String, String> videoQualities;
-
-  /// Chất lượng mặc định được chọn
-  final String defaultQuality;
-
-  /// Các thuộc tính tùy chọn khác
-  final bool autoPlay;
-  final bool looping;
-  final double aspectRatio;
-  final String? title;
-
-  const AdaptiveQualityVideoPlayer({
-    Key? key,
-    required this.videoQualities,
-    required this.defaultQuality,
-    this.autoPlay = false,
-    this.looping = false,
-    this.aspectRatio = 16 / 9,
-    this.title,
-  }) : super(key: key);
-
-  @override
-  _AdaptiveQualityVideoPlayerState createState() => _AdaptiveQualityVideoPlayerState();
-}
-
-class _AdaptiveQualityVideoPlayerState extends State<AdaptiveQualityVideoPlayer> {
-  late String _currentQuality;
-  Duration _savedPosition = Duration.zero;
-  bool _wasPlaying = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentQuality = widget.videoQualities.containsKey(widget.defaultQuality)
-        ? widget.defaultQuality
-        : widget.videoQualities.keys.first;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Wrap with a Container or SizedBox with explicit height or use AspectRatio
-    return AspectRatio(
-      aspectRatio: widget.aspectRatio,
-      child: Stack(
-        children: [
-          // Use Positioned.fill to ensure the video player takes the full Stack space
-          Positioned.fill(
-            child: BaseNetworkVideoPlayer(
-              key: ValueKey(_currentQuality), // Quan trọng: tạo instance mới khi đổi chất lượng
-              videoUrl: widget.videoQualities[_currentQuality]!,
-              aspectRatio: widget.aspectRatio,
-              autoPlay: widget.autoPlay,
-              looping: widget.looping,
-              title: widget.title,
-            ),
-          ),
-
-          // Nút chọn chất lượng
-          Positioned(
-            top: 4,
-            right: 4,
-            child: Material(
-              color: Colors.transparent,
-              child: PopupMenuButton<String>(
-                icon: const Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                tooltip: "Chọn chất lượng",
-                onSelected: (quality) {
-                  setState(() {
-                    _currentQuality = quality;
-                  });
-                },
-                itemBuilder: (context) => widget.videoQualities.keys.map((quality) {
-                  return PopupMenuItem<String>(
-                    value: quality,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(quality),
-                        if (_currentQuality == quality)
-                          const Icon(Icons.check, size: 18)
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

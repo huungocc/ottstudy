@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 enum PDFViewSource {
   asset,
@@ -26,6 +27,9 @@ class BasePDFViewer extends StatefulWidget {
   final Function(PdfZoomDetails)? onZoomLevelChanged;
   final Widget Function(BuildContext, PdfViewerController)? builder;
 
+  /// URL có phải từ database không (chỉ áp dụng cho sourceType = network)
+  final bool? isFromDatabase;
+
   const BasePDFViewer({
     Key? key,
     required this.source,
@@ -43,6 +47,7 @@ class BasePDFViewer extends StatefulWidget {
     this.onPageChanged,
     this.onZoomLevelChanged,
     this.builder,
+    this.isFromDatabase = false,
   }) : super(key: key);
 
   @override
@@ -64,6 +69,17 @@ class _BasePDFViewerState extends State<BasePDFViewer> {
   void dispose() {
     _pdfViewerController.dispose();
     super.dispose();
+  }
+
+  String trimTrailingSlash(String input) {
+    return input.endsWith('/') ? input.substring(0, input.length - 1) : input;
+  }
+
+  String _buildNetworkUrl() {
+    if (widget.sourceType == PDFViewSource.network && widget.isFromDatabase == true) {
+      return '${trimTrailingSlash(dotenv.env['API_URL'] ?? '')}${widget.source}';
+    }
+    return widget.source;
   }
 
   @override
@@ -143,8 +159,9 @@ class _BasePDFViewerState extends State<BasePDFViewer> {
           );
           break;
         case PDFViewSource.network:
+          final String networkUrl = _buildNetworkUrl();
           pdfViewer = SfPdfViewer.network(
-            widget.source,
+            networkUrl,
             controller: _pdfViewerController,
             enableDocumentLinkAnnotation: widget.enableDocumentLinkAnnotation,
             enableTextSelection: widget.enableTextSelection,

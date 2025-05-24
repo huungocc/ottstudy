@@ -22,12 +22,16 @@ class ApiConstant {
   //Course
   static final listCourse = "course/list";
   static final createCourse = "admin/create/course";
+  static final courseInfo = "course/info";
 
   //Lesson
   static final createLesson = "admin/create/lesson";
+  static final listLesson = "lesson/list";
+  static final lessonInfo = "lesson/info";
 
   //Test
   static final createTest = "admin/create/test";
+  static final testInfo = "test/info";
 
   //Question
   static final createQuestion = "admin/create/question";
