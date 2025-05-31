@@ -13,6 +13,7 @@ import '../../../res/colors.dart';
 import '../../../util/common.dart';
 import '../../widget/base_button.dart';
 import '../../widget/base_network_image.dart';
+import '../../widget/base_progress_indicator.dart';
 import '../../widget/common_widget.dart';
 import '../../widget/custom_dialog.dart';
 import '../../widget/custom_text_label.dart';
@@ -80,12 +81,7 @@ class _UserInfoBottomSheetBodyState extends State<UserInfoBottomSheetBody> {
     return BaseScreen(
       hideAppBar: true,
       colorBackground: AppColors.background_white,
-      loadingWidget: Stack(
-        children: [
-          CustomLoading<UserInfoCubit>(),
-          CustomLoading<ApproveRegistrationCubit>()
-        ]
-      ),
+      loadingWidget: CustomLoading<ApproveRegistrationCubit>(),
       messageNotify: Stack(
         children: [
           CustomSnackBar<UserInfoCubit>(),
@@ -94,6 +90,11 @@ class _UserInfoBottomSheetBodyState extends State<UserInfoBottomSheetBody> {
       ),
       body: BlocBuilder<UserInfoCubit, BaseState>(
         builder: (context, state) {
+          if (state is LoadingState) {
+            return Center(
+              child: BaseProgressIndicator(color: AppColors.black,),
+            );
+          }
           if (state is LoadedState<UserModel>) {
             final UserModel userModel = state.data;
             return Column(

@@ -23,7 +23,7 @@ class AdminCourseManageScreen extends StatelessWidget {
 
     final List<Widget> views = [
       AdminCourseInfoScreen(arg: arg,),
-      const StudentManageScreen(),
+      StudentManageScreen(arg: arg,),
       RegistrationScreen(arg: arg),
     ];
 

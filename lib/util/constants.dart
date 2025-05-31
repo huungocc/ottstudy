@@ -39,6 +39,12 @@ class Constants {
     DropdownItem(id: 4, value: 'D'),
   ];
 
+  static List<DropdownItem> studentStatus = [
+    DropdownItem(id: 0, value: 'Tất cả', additionalData: ''),
+    DropdownItem(id: 1, value: 'Đang học', additionalData: 'false'),
+    DropdownItem(id: 2, value: 'Đã hoàn thành', additionalData: 'true'),
+  ];
+
   static List<SelectorItem> subjectFilter = [
     SelectorItem(name: 'Tất cả', id: ''),
     SelectorItem(name: 'Tiếng Việt', id: 'vietnamese'),
