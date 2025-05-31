@@ -23,13 +23,13 @@ class _ChartScreenState extends State<ChartScreen> {
       title: const Align(
         alignment: Alignment.centerLeft,
         child: CustomTextLabel(
-          'Bảng tin',
+          'Bảng xếp hạng',
           gradient: AppColors.base_gradient_3,
           fontSize: 25,
           fontWeight: FontWeight.bold,
         ),
       ),
-      rightWidgets: [Assets.images.icClock.image(), SizedBox(width: 20,)],
+      rightWidgets: [Assets.images.icChart.image(), SizedBox(width: 20,)],
       body: Column(
         children: [
           SizedBox(height: 20,),

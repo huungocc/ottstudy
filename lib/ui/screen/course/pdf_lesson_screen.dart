@@ -20,7 +20,7 @@ class PdfLessonScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => LessonInfoCubit(),
-      child: PdfLessonBody(arg: arg), // Fixed: Use PdfLessonBody instead of PdfLessonScreen
+      child: PdfLessonBody(arg: arg),
     );
   }
 }

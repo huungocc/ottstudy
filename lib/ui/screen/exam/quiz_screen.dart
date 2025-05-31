@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ottstudy/blocs/registration/update_test_cubit.dart';
 import 'package:ottstudy/res/colors.dart';
 import 'package:ottstudy/ui/widget/base_network_image.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
@@ -33,6 +34,9 @@ class QuizScreen extends StatelessWidget {
         BlocProvider(
           create: (context) => ListQuestionCubit(),
         ),
+        BlocProvider(
+          create: (context) => UpdateTestCubit(),
+        )
       ],
       child: QuizBody(arg: arg),
     );
@@ -95,6 +99,14 @@ class _QuizBodyState extends State<QuizBody> {
               CommonWidget.studentInfoText(title: 'Số câu hỏi: ', value: '${questions.length}'),
               CommonWidget.studentInfoText(title: 'Thời gian: ', value: '${testInfo?.time} phút'),
               CommonWidget.studentInfoText(title: 'Điểm yêu cầu: ', value: '${testInfo?.minimumScore}'),
+              if (widget.arg!.isFinalTest == true && widget.arg!.finalTestStatus == true)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: CustomTextLabel(
+                  'Lưu ý: Bạn đã làm bài kiểm tra này trước đây. Kết quả mới sẽ không được tính.',
+                  fontStyle: FontStyle.italic,
+                ),
+              )
             ],
           ),
           titleSubmit: 'Bắt đầu',
@@ -164,6 +176,14 @@ class _QuizBodyState extends State<QuizBody> {
 
     double score = (correctAnswers / questions.length * 10);
     bool isPassed = score >= (testInfo?.minimumScore ?? 0);
+
+    if (isPassed && widget.arg!.isFinalTest == true && widget.arg!.finalTestStatus == false) {
+      context.read<UpdateTestCubit>().approveRegistration({
+        'registration_id': widget.arg!.registrationId,
+        'final_test_score': score,
+        'final_test_passed': true
+      });
+    }
 
     showDialog(
       context: context,

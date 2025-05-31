@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ottstudy/data/models/registration_model.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../data/models/course_model.dart';
 import '../../data/models/lesson_model.dart';
 import '../../data/models/question_model.dart';
 import '../../data/models/test_model.dart';
+import '../../data/models/user_model.dart';
 import '../../res/colors.dart';
+import '../../util/common.dart';
 import '../../util/constants.dart';
 import 'base_network_image.dart';
 import 'widget.dart';
@@ -124,7 +128,7 @@ class CommonWidget {
     );
   }
 
-  static Widget examInfo(TestModel model, {GestureTapCallback? onTap, double? borderRadius}) {
+  static Widget examInfo(TestModel model, {GestureTapCallback? onTap, double? borderRadius, double? finalTestScore}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -147,7 +151,14 @@ class CommonWidget {
                   courseInfo(iconData: Icons.play_arrow_rounded, info: '${model.time} p', color: AppColors.white),
                 ],
               )
-            )
+            ),
+            SizedBox(width: 10,),
+            if (finalTestScore! > 0)
+            CustomTextLabel(
+              '${Common.doubleWithoutDecimalToInt(finalTestScore)} đ',
+              color: AppColors.white,
+              fontSize: 20,
+            ),
           ],
         ),
       ),
@@ -313,7 +324,7 @@ class CommonWidget {
                   SizedBox(height: 5,),
                   courseInfo(
                       iconData: Icons.person_2_rounded,
-                      info: '${model.studentCount} học sinh'
+                      info: model.studentCount != null ? '${model.studentCount} học sinh' : '0 học sinh',
                   ),
                 ],
               ),
@@ -324,8 +335,8 @@ class CommonWidget {
     );
   }
 
-  static Widget studentCard({String? url, String? studentName, String? studentId,
-    EdgeInsets? margin, GestureTapCallback? onTap, bool? isFinished = false
+  static Widget studentCard(RegistrationModel model, {EdgeInsets? margin, GestureTapCallback? onTap, bool? isFinished =
+  false
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -339,7 +350,8 @@ class CommonWidget {
         child: Row(
           children: [
             BaseNetworkImage(
-              url: url ?? '',
+              url: model.studentAvatar ?? '',
+              isFromDatabase: true,
               width: 70,
               height: 70,
               borderRadius: 15,
@@ -349,11 +361,11 @@ class CommonWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextLabel(studentName ?? '', fontSize: 16,),
+                  CustomTextLabel(model.studentName ?? '', fontSize: 16,),
                   SizedBox(height: 5,),
                   courseInfo(
                       iconData: Icons.person_2_rounded,
-                      info: studentId ?? ''
+                      info: model.studentCode ?? ''
                   ),
                 ],
               ),
@@ -426,58 +438,53 @@ class CommonWidget {
     );
   }
 
-  static Widget studentInfo({required bool isApproving}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      decoration: const BoxDecoration(
-        color: AppColors.background_white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
+  static Widget studentInfo(UserModel userModel, {
+    required bool isApproving,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        BaseNetworkImage(
+          url: userModel.avatarUrl ?? '',
+          isFromDatabase: true,
+          height: 100,
+          width: 100,
+          boxFit: BoxFit.cover,
+          borderRadius: 50,
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          BaseNetworkImage(
-            url: 'https://toquoc.mediacdn.vn/280518851207290880/2022/12/15/p0dnxrcv-16710704848821827978943.jpg',
-            height: 100,
-            width: 100,
-            boxFit: BoxFit.cover,
-            borderRadius: 50,
+        SizedBox(height: 20),
+        studentInfoText(
+          title: 'Mã học sinh',
+          value: userModel.studentCode ?? 'N/A',
+        ),
+        studentInfoText(
+          title: 'Họ và tên',
+          value: userModel.fullName ?? 'N/A',
+        ),
+        studentInfoText(
+          title: 'Ngày sinh',
+          value: userModel.birthDate ?? 'N/A',
+        ),
+        studentInfoText(
+          title: 'Số điện thoại',
+          value: userModel.phoneNumber ?? 'N/A',
+        ),
+        studentInfoText(
+          title: 'Lớp',
+          value: userModel.grade.toString(),
+        ),
+        Visibility(
+          visible: isApproving,
+          child: BaseButton(
+            title: 'Phê duyệt',
+            borderRadius: 20,
+            onTap: () {
+
+            },
           ),
-          SizedBox(height: 20,),
-          studentInfoText(
-            title: 'Mã học sinh',
-            value: 'HS102',
-          ),
-          studentInfoText(
-            title: 'Họ và tên',
-            value: 'Nguyễn Hữu Ngọc',
-          ),
-          studentInfoText(
-            title: 'Ngày sinh',
-            value: '03/10/2003',
-          ),
-          studentInfoText(
-            title: 'Số điện thoại',
-            value: '0362335820',
-          ),
-          studentInfoText(
-            title: 'Lớp',
-            value: '5',
-          ),
-          Visibility(
-            visible: isApproving,
-            child: BaseButton(
-              title: 'Phê duyệt',
-              borderRadius: 20,
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 

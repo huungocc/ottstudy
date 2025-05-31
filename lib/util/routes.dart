@@ -15,7 +15,7 @@ import 'package:page_transition/page_transition.dart';
 import '../data/models/course_model.dart';
 import '../data/models/test_model.dart';
 import '../ui/screen/admin/admin_course_edit_screen.dart';
-import '../ui/screen/admin/admin_course_info_screen.dart';
+import '../ui/screen/admin/admin_course_manage_screen.dart';
 import '../ui/screen/admin/admin_home_screen.dart';
 import '../ui/screen/admin/admin_lesson_edit_screen.dart';
 import '../ui/screen/auth/forgot_password_screen.dart';
@@ -48,7 +48,7 @@ class Routes {
   static const String myCourseScreen = "/myCourseScreen";
   static const String chatBotScreen = "/chatBotScreen";
   static const String adminHomeScreen = "/adminHomeScreen";
-  static const String adminCourseInfoScreen = "/adminCourseInfoScreen";
+  static const String adminCourseManageScreen = "/adminCourseManageScreen";
   static const String adminCourseEditScreen = "/adminCourseEditScreen";
   static const String adminLessonEditScreen = "/adminLessonEditScreen";
   static const String editAccountInfoScreen = "/editAccountInfoScreen";
@@ -148,8 +148,17 @@ class Routes {
       //Admin
       case adminHomeScreen:
         return PageTransition(child: AdminHomeScreen(), type: PageTransitionType.fade);
-      case adminCourseInfoScreen:
-        return PageTransition(child: AdminCourseInfoScreen(), type: PageTransitionType.rightToLeft);
+      case adminCourseManageScreen:
+        CourseModel? arg;
+        if (settings.arguments is CourseModel) {
+          arg = settings.arguments as CourseModel;
+        }
+        return PageTransition(
+            child: AdminCourseManageScreen(
+                arg: arg
+            ),
+            type: PageTransitionType.rightToLeft
+        );
       case adminCourseEditScreen:
         return PageTransition(child: AdminCourseEditScreen(), type: PageTransitionType.rightToLeft);
       case adminLessonEditScreen:
