@@ -62,7 +62,8 @@ class _RegistrationBodyState extends State<RegistrationBody> {
 
   void getData() {
     Map<String, dynamic> param = {
-      'course_id': widget.arg!.id
+      'course_id': widget.arg!.id,
+      'status': 'waiting'
     };
 
     context.read<ListRegistrationCubit>().getListRegistration(param);
@@ -119,7 +120,6 @@ class _RegistrationBodyState extends State<RegistrationBody> {
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CommonWidget.studentCard(
                                 registration,
-                                isFinished: false,
                                 onTap: () {
                                   _onRegistration(registration.copyWith(isApproval: true));
                                 }
@@ -141,82 +141,6 @@ class _RegistrationBodyState extends State<RegistrationBody> {
           )
         ],
       ),
-    );
-  }
-
-  Widget studentInfo(UserModel userModel, {
-    required bool isApproving,
-    VoidCallback? onApprove,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Thông tin học sinh',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(Icons.close),
-            ),
-          ],
-        ),
-        SizedBox(height: 20),
-
-        // Avatar
-        BaseNetworkImage(
-          url: userModel.avatarUrl ?? '',
-          isFromDatabase: true,
-          height: 100,
-          width: 100,
-          boxFit: BoxFit.cover,
-          borderRadius: 50,
-        ),
-        SizedBox(height: 20),
-
-        // Thông tin học sinh
-        CommonWidget.studentInfoText(
-          title: 'Mã học sinh',
-          value: userModel.studentCode ?? 'N/A',
-        ),
-        CommonWidget.studentInfoText(
-          title: 'Họ và tên',
-          value: userModel.fullName ?? 'N/A',
-        ),
-        CommonWidget.studentInfoText(
-          title: 'Ngày sinh',
-          value: userModel.birthDate ?? 'N/A',
-        ),
-        CommonWidget.studentInfoText(
-          title: 'Số điện thoại',
-          value: userModel.phoneNumber ?? 'N/A',
-        ),
-        CommonWidget.studentInfoText(
-          title: 'Lớp',
-          value: userModel.grade.toString(),
-        ),
-
-        SizedBox(height: 20),
-
-        // Nút phê duyệt
-        Visibility(
-          visible: isApproving,
-          child: BaseButton(
-            title: 'Phê duyệt',
-            borderRadius: 20,
-            onTap: onApprove,
-          ),
-        ),
-
-        SizedBox(height: 20),
-      ],
     );
   }
 }

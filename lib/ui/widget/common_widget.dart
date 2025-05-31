@@ -128,7 +128,8 @@ class CommonWidget {
     );
   }
 
-  static Widget examInfo(TestModel model, {GestureTapCallback? onTap, double? borderRadius, double? finalTestScore}) {
+  static Widget examInfo(TestModel model, {GestureTapCallback? onTap, double? borderRadius, double? finalTestScore = 0
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -335,9 +336,7 @@ class CommonWidget {
     );
   }
 
-  static Widget studentCard(RegistrationModel model, {EdgeInsets? margin, GestureTapCallback? onTap, bool? isFinished =
-  false
-  }) {
+  static Widget studentCard(RegistrationModel model, {EdgeInsets? margin, GestureTapCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -370,15 +369,10 @@ class CommonWidget {
                 ],
               ),
             ),
-            SizedBox(width: 15,),
-            isFinished == true
-            ? Column(
-              children: [
-                CustomTextLabel('Điểm'),
-                SizedBox(height: 5,),
-                CustomTextLabel(9.4, fontWeight: FontWeight.bold,)
-              ],
-            )
+            const SizedBox(width: 15,),
+            model.finalTestScore != null
+            ? CustomTextLabel('${Common.doubleWithoutDecimalToInt(model.finalTestScore)} đ', fontSize: 18,
+              fontWeight: FontWeight.bold,)
             : const SizedBox.shrink()
           ],
         ),

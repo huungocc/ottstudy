@@ -72,92 +72,87 @@ class _AdminCourseInfoBodyState extends State<AdminCourseInfoBody> {
         CustomLoading<CourseInfoCubit>(),
         CustomLoading<ListLessonCubit>(),
       ]),
-      body: RefreshIndicator(
-        color: AppColors.black,
-        backgroundColor: AppColors.white,
-        onRefresh: () async => getCourseData(),
-        child: BlocBuilder<CourseInfoCubit, BaseState>(
-          builder: (_, state) {
-            if (state is LoadedState<CourseModel>) {
-              final courseModel = state.data;
-              context.read<ListLessonCubit>().getListLesson({
-                'lessonIds': state.data.lessons
-              });
-              context.read<TestInfoCubit>().testInfo({
-                'id': state.data.finalTestId
-              });
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    BaseNetworkImage(
-                      url: courseModel.courseImage ?? '',
-                      isFromDatabase: true,
+      body: BlocBuilder<CourseInfoCubit, BaseState>(
+        builder: (_, state) {
+          if (state is LoadedState<CourseModel>) {
+            final courseModel = state.data;
+            context.read<ListLessonCubit>().getListLesson({
+              'lessonIds': state.data.lessons
+            });
+            context.read<TestInfoCubit>().testInfo({
+              'id': state.data.finalTestId
+            });
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  BaseNetworkImage(
+                    url: courseModel.courseImage ?? '',
+                    isFromDatabase: true,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        CustomTextLabel(courseModel.teacher ?? 'Không xác định'),
+                        const SizedBox(height: 10),
+                        CustomTextLabel(
+                          courseModel.courseName ?? 'Không xác định',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(height: 10),
+                        CommonWidget.courseInfo_2(
+                            studentCount: courseModel.studentCount,
+                            subjectId: courseModel.subjectId
+                        ),
+                        const SizedBox(height: 10),
+                        CustomTextLabel(courseModel.description ?? 'Không xác định'),
+                      ],
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          CustomTextLabel(courseModel.teacher ?? 'Không xác định'),
-                          const SizedBox(height: 10),
-                          CustomTextLabel(
-                            courseModel.courseName ?? 'Không xác định',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          const SizedBox(height: 10),
-                          CommonWidget.courseInfo_2(
-                              studentCount: courseModel.studentCount,
-                              subjectId: courseModel.subjectId
-                          ),
-                          const SizedBox(height: 10),
-                          CustomTextLabel(courseModel.description ?? 'Không xác định'),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20,),
-                    BlocBuilder<ListLessonCubit, BaseState>(
-                        builder: (_, state) {
-                          if (state is LoadedState<List<LessonModel>>) {
-                            final List<LessonModel> lessonList = state.data;
-                            if (lessonList.isNotEmpty) {
-                              return ListView.separated(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: lessonList.length,
-                                itemBuilder: (context, index) {
-                                  final lesson = lessonList[index];
-                                  return CommonWidget.lessonInfo(
-                                    lesson,
-                                    order: index + 1,
-                                  );
-                                },
-                                separatorBuilder: (context, index) => const SizedBox(height: 10),
-                              );
-                            }
-                          }
-                          return const SizedBox.shrink();
-                        }
-                    ),
-                    BlocBuilder<TestInfoCubit, BaseState>(
-                        builder: (_, state) {
-                          if (state is LoadedState<TestModel>) {
-                            final TestModel testModel = state.data;
-                            return CommonWidget.examInfo(
-                              testModel,
+                  ),
+                  const SizedBox(height: 20,),
+                  BlocBuilder<ListLessonCubit, BaseState>(
+                      builder: (_, state) {
+                        if (state is LoadedState<List<LessonModel>>) {
+                          final List<LessonModel> lessonList = state.data;
+                          if (lessonList.isNotEmpty) {
+                            return ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: lessonList.length,
+                              itemBuilder: (context, index) {
+                                final lesson = lessonList[index];
+                                return CommonWidget.lessonInfo(
+                                  lesson,
+                                  order: index + 1,
+                                );
+                              },
+                              separatorBuilder: (context, index) => const SizedBox(height: 10),
                             );
                           }
-                          return const SizedBox.shrink();
                         }
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
+                        return const SizedBox.shrink();
+                      }
+                  ),
+                  BlocBuilder<TestInfoCubit, BaseState>(
+                    builder: (_, state) {
+                      if (state is LoadedState<TestModel>) {
+                        final TestModel testModel = state.data;
+                        return CommonWidget.examInfo(
+                          testModel,
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }
+                  ),
+                ],
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
