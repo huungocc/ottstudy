@@ -26,4 +26,21 @@ class UserInfoCubit extends Cubit<BaseState> {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
+
+  Future<void> getUserInfoByAdmin(Map<String, dynamic>? param) async {
+    try {
+      emit(LoadingState());
+
+      ApiResponse response = await Network().get(url: ApiConstant.userInfoByAdmin, params: param);
+
+      if (response.isSuccess) {
+        UserModel userModel = UserModel.fromJson(response.data);
+        emit(LoadedState<UserModel>(userModel));
+      } else {
+        emit(ErrorState(response.errMessage ?? "Đã có lỗi xảy ra"));
+      }
+    } catch(e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
 }

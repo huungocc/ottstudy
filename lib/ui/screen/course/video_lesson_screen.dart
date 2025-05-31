@@ -73,6 +73,7 @@ class _VideoLessonBodyState extends State<VideoLessonBody> {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 20,),
                         CustomTextLabel(lessonModel.lessonName ?? 'Không xác định', fontSize: 18, fontWeight:

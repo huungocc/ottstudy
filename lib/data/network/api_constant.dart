@@ -37,6 +37,14 @@ class ApiConstant {
   static final createQuestion = "admin/create/question";
   static final listQuestion = "question/list";
 
+  //Registration
+  static final createRegistration = "registration/create";
+  static final registrationStatus = "registration/status";
+  static final listRegistration = "admin/registration/list";
+  static final approveRegistration = "admin/registration/accept";
+  static final userInfoByAdmin = "admin/user_info";
+  static final updateTestCubit = "registration/update_test";
+
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
   static final geminiKey = dotenv.env['GEMINI_KEY'].toString();

@@ -69,16 +69,16 @@ class _StudentManageScreenState extends State<StudentManageScreen> {
             ],
           ),
           SizedBox(height: 20,),
-          CommonWidget.studentCard(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            url: 'https://toquoc.mediacdn.vn/280518851207290880/2022/12/15/p0dnxrcv-16710704848821827978943.jpg',
-            studentName: 'Nguyễn Hữu Ngọc',
-            studentId: 'HS102',
-            isFinished: true,
-            onTap: () {
-              _onStudentInfo();
-            }
-          )
+          // CommonWidget.studentCard(
+          //   margin: EdgeInsets.symmetric(horizontal: 20),
+          //   url: 'https://toquoc.mediacdn.vn/280518851207290880/2022/12/15/p0dnxrcv-16710704848821827978943.jpg',
+          //   studentName: 'Nguyễn Hữu Ngọc',
+          //   studentId: 'HS102',
+          //   isFinished: true,
+          //   onTap: () {
+          //     _onStudentInfo();
+          //   }
+          // )
         ],
       ),
     );

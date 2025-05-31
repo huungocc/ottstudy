@@ -160,7 +160,7 @@ class _AdminHomeBodyState extends State<AdminHomeBody> {
                             child: CommonWidget.adminCourseCard(
                               course,
                               onTap: () {
-
+                                Navigator.pushNamed(context, Routes.adminCourseManageScreen, arguments: course);
                               },
                             ),
                           );

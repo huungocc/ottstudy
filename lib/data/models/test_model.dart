@@ -3,12 +3,18 @@ class TestModel {
   int? time;
   double? minimumScore;
   List<String>? questions;
+  bool? isFinalTest;
+  String? registrationId;
+  bool? finalTestStatus;
 
   TestModel({
     this.id,
     this.time,
     this.minimumScore,
-    this.questions
+    this.questions,
+    this.isFinalTest,
+    this.registrationId,
+    this.finalTestStatus
   });
 
   TestModel.fromJson(Map<String, dynamic> json) {
@@ -25,5 +31,27 @@ class TestModel {
     data['minimum_score'] = minimumScore;
     data['questions'] = questions;
     return data;
+  }
+}
+
+extension TestModelCopyWith on TestModel {
+  TestModel copyWith({
+    String? id,
+    int? time,
+    double? minimumScore,
+    List<String>? questions,
+    bool? isFinalTest,
+    String? registrationId,
+    bool? finalTestStatus,
+  }) {
+    return TestModel(
+      id: id ?? this.id,
+      time: time ?? this.time,
+      minimumScore: minimumScore ?? this.minimumScore,
+      questions: questions ?? this.questions,
+      isFinalTest: isFinalTest ?? this.isFinalTest,
+      registrationId: registrationId ?? this.registrationId,
+      finalTestStatus: finalTestStatus ?? this.finalTestStatus
+    );
   }
 }

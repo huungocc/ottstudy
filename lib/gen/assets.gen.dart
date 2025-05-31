@@ -33,6 +33,10 @@ class $AssetsImagesGen {
   AssetGenImage get icBrainWhite =>
       const AssetGenImage('assets/images/ic_brain_white.png');
 
+  /// File path: assets/images/ic_chart.png
+  AssetGenImage get icChart =>
+      const AssetGenImage('assets/images/ic_chart.png');
+
   /// File path: assets/images/ic_clock.png
   AssetGenImage get icClock =>
       const AssetGenImage('assets/images/ic_clock.png');
@@ -82,6 +86,7 @@ class $AssetsImagesGen {
         appBarBackground,
         icBack,
         icBrainWhite,
+        icChart,
         icClock,
         icClockWhite,
         icExplorer,
