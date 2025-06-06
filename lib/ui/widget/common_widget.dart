@@ -237,57 +237,43 @@ class CommonWidget {
     );
   }
 
-  static Widget myCourseCard({required bool isFinished}) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Column(
-        children: [
-          CustomTextLabel('300 bài toán thiếu nhi dễ như ăn kẹo ai cũng làm được', fontWeight: FontWeight.bold,
-            fontSize: 16, maxLines: 2,),
-          SizedBox(height: 10,),
-          isFinished
-          ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: courseInfo(iconData: Icons.person_2_rounded, info: 'Nguyễn Văn A'),
-          )
-          : Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: 5/10,
-                  minHeight: 5,
-                  backgroundColor: AppColors.gray_border,
-                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.base_blue),
-                ),
-              ),
-              SizedBox(height: 10,),
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: CustomTextLabel('5/10', fontWeight: FontWeight.bold,)
-              ),
-            ],
-          ),
-          SizedBox(height: 10,),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ClipOval(
-              child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  gradient: AppColors.base_gradient_2
-                ),
-                child: Icon(isFinished ? Icons.check : Icons.play_arrow_rounded, size: 35, color: AppColors.white,),
-              ),
+  static Widget myCourseCard(CourseModel model, {GestureTapCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextLabel(model.courseName, fontWeight: FontWeight.bold,
+              fontSize: 16, maxLines: 2,),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: courseInfo(iconData: Icons.person_2_rounded, info: model.teacher ?? 'N/A'),
             ),
-          )
-        ],
+            const SizedBox(height: 5,),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ClipOval(
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    gradient: AppColors.base_gradient_2
+                  ),
+                  child: Icon(model.finalTestPassed == true ? Icons.check : Icons.play_arrow_rounded, size: 35, color:
+                  AppColors.white,),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

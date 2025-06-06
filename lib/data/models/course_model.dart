@@ -9,6 +9,7 @@ class CourseModel {
   int? studentCount;
   List<String>? lessons;
   String? finalTestId;
+  bool? finalTestPassed;
 
   CourseModel({
     this.id,
@@ -21,6 +22,7 @@ class CourseModel {
     this.studentCount,
     this.lessons,
     this.finalTestId,
+    this.finalTestPassed
   });
 
   CourseModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class CourseModel {
     studentCount = json['student_count'];
     finalTestId = json['final_test_id'];
     lessons = json['lessons'] != null ? List<String>.from(json['lessons']) : null;
+    finalTestPassed = json['final_test_passed'];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +51,7 @@ class CourseModel {
     data['student_count'] = studentCount;
     data['final_test_id'] = finalTestId;
     data['lessons'] = lessons;
+    data['final_test_passed'] = finalTestPassed;
     return data;
   }
 }

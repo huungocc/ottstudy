@@ -44,6 +44,7 @@ class ApiConstant {
   static final approveRegistration = "admin/registration/accept";
   static final userInfoByAdmin = "admin/user_info";
   static final updateTestCubit = "registration/update_test";
+  static final myListRegistration = "registration/list";
 
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
