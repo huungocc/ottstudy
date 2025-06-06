@@ -50,17 +50,13 @@ class _ExploreBodyState extends State<ExploreBody> {
     super.dispose();
   }
 
-  void getData({bool isRefresh = false, int? grade, String? subjectId}) {
-    Map<String,dynamic> param;
-    if (isRefresh == true) {
-      param = {};
-    } else {
-      param = {
-        'keyword': searchController.text,
-        if (grade != null) 'grade': grade,
-        'subject_id': subjectId ?? ''
-      };
-    }
+  void getData({int? grade, String? subjectId}) {
+    Map<String,dynamic> param = {
+      'keyword': searchController.text,
+      if (grade != null) 'grade': grade,
+      'subject_id': subjectId ?? ''
+    };
+
     context.read<ListCourseCubit>().getListCourse(param);
   }
 
@@ -143,7 +139,7 @@ class _ExploreBodyState extends State<ExploreBody> {
             child: RefreshIndicator(
               color: AppColors.black,
               backgroundColor: AppColors.white,
-              onRefresh: () async => getData(isRefresh: true),
+              onRefresh: () async => getData(),
               child: BlocBuilder<ListCourseCubit, BaseState>(
                 builder: (context, state) {
                   if (state is LoadingState) {
@@ -172,7 +168,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                       );
                     } else {
                       return Center(
-                        child: CustomTextLabel('Chưa có khóa học nào'),
+                        child: CustomTextLabel('Không có dữ liệu'),
                       );
                     }
                   }
