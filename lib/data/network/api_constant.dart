@@ -46,6 +46,11 @@ class ApiConstant {
   static final updateTestCubit = "registration/update_test";
   static final myListRegistration = "registration/list";
 
+  //Rank
+  static final rank = "rank/list";
+  static final myRank = "rank/my_rank";
+  static final updateStudyTime = "registration/add_study_time";
+
   //Gemini Key
   static final geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
   static final geminiKey = dotenv.env['GEMINI_KEY'].toString();

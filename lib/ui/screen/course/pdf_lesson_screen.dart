@@ -4,10 +4,14 @@ import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:ottstudy/ui/widget/common_widget.dart';
 
 import '../../../blocs/base_bloc/base_state.dart';
+import '../../../blocs/base_bloc/count_state.dart';
+import '../../../blocs/count_cubit.dart';
 import '../../../blocs/lesson/lesson_info_cubit.dart';
+import '../../../blocs/registration/study_time_cubit.dart';
 import '../../../data/models/lesson_model.dart';
 import '../../../data/models/test_model.dart';
 import '../../../res/colors.dart';
+import '../../../util/common.dart';
 import '../../../util/routes.dart';
 import '../../widget/base_pdf_viewer.dart';
 
@@ -18,8 +22,18 @@ class PdfLessonScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => LessonInfoCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => LessonInfoCubit(),
+        ),
+        BlocProvider(
+          create: (_) => StudyTimeCubit(),
+        ),
+        BlocProvider(
+          create: (_) => CountCubit(),
+        )
+      ],
       child: PdfLessonBody(arg: arg),
     );
   }
@@ -35,6 +49,9 @@ class PdfLessonBody extends StatefulWidget {
 }
 
 class _PdfLessonBodyState extends State<PdfLessonBody> {
+  CountCubit? _countCubit;
+  StudyTimeCubit? _studyTimeCubit;
+
   LessonModel lessonModel = LessonModel();
 
   @override
@@ -43,6 +60,33 @@ class _PdfLessonBodyState extends State<PdfLessonBody> {
     if (widget.arg != null && widget.arg is LessonModel) {
       getData();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _countCubit = context.read<CountCubit>();
+    _studyTimeCubit = context.read<StudyTimeCubit>();
+  }
+
+  @override
+  void deactivate() {
+    if (_countCubit != null && _studyTimeCubit != null) {
+      if (!_countCubit!.isClosed && !_studyTimeCubit!.isClosed) {
+        final studyTimeInSeconds = _countCubit!.state.currentTime;
+
+        if (studyTimeInSeconds >= 60) {
+          final studyTimeInMinutes = (studyTimeInSeconds / 60).round();
+          _studyTimeCubit!.updateStudyTime({
+            'time_to_add': studyTimeInMinutes
+          });
+        }
+
+        _countCubit!.resetCount();
+      }
+    }
+
+    super.deactivate();
   }
 
   void getData() {
@@ -63,6 +107,7 @@ class _PdfLessonBodyState extends State<PdfLessonBody> {
             builder: (_, state) {
               if (state is LoadedState<LessonModel>) {
                 lessonModel = state.data;
+                context.read<CountCubit>().startCount();
                 return BasePDFViewer(
                   sourceType: PDFViewSource.network,
                   source: lessonModel.fileUrl ?? '',
@@ -74,14 +119,25 @@ class _PdfLessonBodyState extends State<PdfLessonBody> {
         ),
       ),
       bottomBar: BottomAppBar(
-        height: 70,
+        height: 100,
         color: AppColors.background_white,
-        child: CommonWidget.doExerciseButton(
-            onTap: () {
-              Navigator.pushNamed(context, Routes.quizScreen, arguments: TestModel(
-                  id: lessonModel.testId
-              ));
-            }
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            BlocBuilder<CountCubit, CountState>(
+              builder: (context, state) {
+                return CommonWidget.courseInfo(iconData: Icons.timelapse_rounded, info: Common
+                    .formatTimeGps(state.currentTime));
+              },
+            ),
+            CommonWidget.doExerciseButton(
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.quizScreen, arguments: TestModel(
+                      id: lessonModel.testId
+                  ));
+                }
+            ),
+          ],
         ),
       ),
     );

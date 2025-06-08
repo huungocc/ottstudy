@@ -60,6 +60,11 @@ class Constants {
     SelectorItem(name: 'Tiếng Anh', id: 'english'),
   ];
 
+  static List<SelectorItem> rankSelector = [
+    SelectorItem(name: 'Điểm/số khóa học', id: 'average_score'),
+    SelectorItem(name: 'Thời gian học', id: 'study_time'),
+  ];
+
   static String getSubjectNameById(String id) {
     final item = subjectFilter.firstWhere(
           (element) => element.id == id,
