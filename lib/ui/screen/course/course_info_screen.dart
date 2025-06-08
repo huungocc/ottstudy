@@ -60,7 +60,7 @@ class CourseInfoBody extends StatefulWidget {
 }
 
 class _CourseInfoBodyState extends State<CourseInfoBody> {
-  String registrationStatus = 'accepted';
+  String? registrationStatus;
   bool finalTestStatus = false;
   String registrationId = '';
   double finalTestScore = 0;
@@ -127,16 +127,25 @@ class _CourseInfoBodyState extends State<CourseInfoBody> {
               setState(() {
                 registrationStatus = 'waiting';
               });
+              getRegistrationStatus();
+              _showSnackBar('Đăng ký thành công! Vui lòng chờ xét duyệt.');
+            } else if (createState is ErrorState) {
+              _showSnackBar('Đăng ký thất bại. Vui lòng thử lại!', isError: true);
             }
           },
           builder: (context, createState) {
+            if (registrationStatus == 'accepted') {
+              return const SizedBox.shrink();
+            }
+
             String buttonTitle;
             VoidCallback? onPressed;
+            bool isLoading = createState is LoadingState;
 
             switch (registrationStatus) {
               case 'none':
-                buttonTitle = 'Đăng ký học';
-                onPressed = createRegistration;
+                buttonTitle = isLoading ? 'Đang xử lý...' : 'Đăng ký học';
+                onPressed = isLoading ? null : createRegistration;
                 break;
               case 'waiting':
                 buttonTitle = 'Chờ xét duyệt';
@@ -146,21 +155,22 @@ class _CourseInfoBodyState extends State<CourseInfoBody> {
                 buttonTitle = 'Đã được duyệt';
                 onPressed = null;
                 break;
+              case 'rejected':
+                buttonTitle = 'Đăng ký lại';
+                onPressed = createRegistration;
+                break;
               default:
-                buttonTitle = '';
-                onPressed = null;
+                buttonTitle = 'Đăng ký học';
+                onPressed = createRegistration;
             }
 
-            return Visibility(
-              visible: !(registrationStatus == 'accepted'),
-              child: BottomAppBar(
-                color: AppColors.background_white,
-                child: BaseButton(
-                  title: buttonTitle,
-                  isDisable: registrationStatus == 'waiting',
-                  borderRadius: 20,
-                  onTap: registrationStatus == 'none' ? onPressed : null,
-                ),
+            return BottomAppBar(
+              color: AppColors.background_white,
+              child: BaseButton(
+                title: buttonTitle,
+                isDisable: registrationStatus == 'waiting' || isLoading,
+                borderRadius: 20,
+                onTap: onPressed,
               ),
             );
           },

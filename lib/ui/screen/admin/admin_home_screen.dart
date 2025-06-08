@@ -78,17 +78,6 @@ class _AdminHomeBodyState extends State<AdminHomeBody> {
       ),
       rightWidgets: [
         GestureDetector(
-          onTap: () {
-            //
-          },
-          child: PhosphorIcon(
-            PhosphorIcons.chartBar(),
-            color: AppColors.black,
-            size: 30,
-          ),
-        ),
-        SizedBox(width: 20,),
-        GestureDetector(
           onTap: () async {
             await SharedPreferenceUtil.clearData();
             Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);

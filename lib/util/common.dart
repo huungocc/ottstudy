@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
 import '../ui/screen/tool/calculator_screen.dart';
-import '../ui/widget/custom_selector.dart';
 
 class Common {
   static DateTime? parserDate(String? date, {String? format}) {
@@ -205,6 +204,22 @@ class Common {
       return '${hours}g${minutes}p${remainingSeconds}s';
     }
   }
+
+  static String formatTimeFromMinute(int minutesInput) {
+    int totalSeconds = minutesInput * 60;
+
+    if (totalSeconds < 60) {
+      return '${totalSeconds}s';
+    } else if (totalSeconds < 3600) {
+      int minutes = totalSeconds ~/ 60;
+      return '${minutes}p';
+    } else {
+      int hours = totalSeconds ~/ 3600;
+      int minutes = (totalSeconds % 3600) ~/ 60;
+      return '${hours}g${minutes}p';
+    }
+  }
+
 
   static void showCalculator(BuildContext context) {
     showModalBottomSheet(

@@ -14,12 +14,16 @@ class CustomSelector extends StatefulWidget {
   final List<SelectorItem> items;
   final Function(String id, int index) onTap;
   final int initialSelectedIndex;
+  final Gradient? selectedColor;
+  final int maxItemsForStretch;
 
   const CustomSelector({
     Key? key,
     required this.items,
     required this.onTap,
     this.initialSelectedIndex = 0,
+    this.selectedColor = AppColors.base_gradient_1,
+    this.maxItemsForStretch = 2,
   }) : super(key: key);
 
   @override
@@ -39,8 +43,6 @@ class _CustomSelectorState extends State<CustomSelector> {
 
   void _setupDisplayItems() {
     _displayItems = [];
-
-    // Thêm các item từ widget
     _displayItems.addAll(widget.items);
   }
 
@@ -50,46 +52,72 @@ class _CustomSelectorState extends State<CustomSelector> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
         height: 50,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: _displayItems.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                  widget.onTap(_displayItems[index].id, index);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  decoration: BoxDecoration(
-                    gradient: _selectedIndex == index
-                        ? AppColors.base_gradient_1
-                        : null,
-                    color: _selectedIndex == index ? null : AppColors.white,
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: CustomTextLabel(
-                      _displayItems[index].name,
-                      color: _selectedIndex == index ? AppColors.white : AppColors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
+        child: _displayItems.length <= widget.maxItemsForStretch
+            ? _buildExpandedRow()
+            : _buildScrollableList(),
+      ),
+    );
+  }
+
+  // Build Row với Expanded widgets để kéo căng đều
+  Widget _buildExpandedRow() {
+    return Row(
+      children: List.generate(_displayItems.length, (index) {
+        return Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              right: index < _displayItems.length - 1 ? 12.0 : 0,
+            ),
+            child: _buildSelectorItem(index),
+          ),
+        );
+      }),
+    );
+  }
+
+  // Build ListView cho trường hợp cần cuộn
+  Widget _buildScrollableList() {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: _displayItems.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: _buildSelectorItem(index),
+        );
+      },
+    );
+  }
+
+  // Build item selector chung
+  Widget _buildSelectorItem(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+        widget.onTap(_displayItems[index].id, index);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        decoration: BoxDecoration(
+          gradient: _selectedIndex == index ? widget.selectedColor : null,
+          color: _selectedIndex == index ? null : AppColors.white,
+          borderRadius: BorderRadius.circular(16.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Center(
+          child: CustomTextLabel(
+            _displayItems[index].name,
+            color: _selectedIndex == index ? AppColors.white : AppColors.black,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

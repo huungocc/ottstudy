@@ -398,6 +398,7 @@ class _QuizBodyState extends State<QuizBody> {
       margin: const EdgeInsets.symmetric(horizontal: 15),
       child: BaseNetworkImage(
         url: questions[currentQuestionIndex].questionImage ?? '',
+        isFromDatabase: true
       ),
     );
   }

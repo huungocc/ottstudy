@@ -11,6 +11,7 @@ import 'package:ottstudy/ui/widget/custom_text_label.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../blocs/base_bloc/chat_bot_state.dart';
 import '../../../blocs/chat_bot_cubit.dart';
+import '../../../gen/assets.gen.dart';
 import '../../widget/custom_snack_bar.dart';
 
 class ChatBotScreen extends StatelessWidget {
@@ -147,6 +148,19 @@ class _ChatBotBodyState extends State<ChatBotBody> {
                   _scrollToBottom();
                 },
                 builder: (context, state) {
+                  if (state.messages.isEmpty) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Assets.images.imgGirlHome.image(scale: 2),
+                        const SizedBox(height: 20,),
+                        const CustomTextLabel('Xin chào! mình là trợ lý ảo của bạn.\nCó thắc mắc gì đừng ngại hỏi '
+                            'mình '
+                            'nhé!', textAlign: TextAlign.center, fontSize: 15, gradient: AppColors.base_gradient_1,
+                          fontWeight: FontWeight.bold,)
+                      ],
+                    );
+                  }
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: state.messages.length,

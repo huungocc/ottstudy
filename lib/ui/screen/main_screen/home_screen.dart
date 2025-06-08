@@ -1,22 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ottstudy/blocs/auth/user_info_cubit.dart';
+import 'package:ottstudy/blocs/base_bloc/base.dart';
+import 'package:ottstudy/blocs/rank/my_rank_cubit.dart';
+import 'package:ottstudy/blocs/registration/my_registration_cubit.dart';
 import 'package:ottstudy/ui/widget/base_screen.dart';
 import 'package:ottstudy/ui/widget/custom_text_label.dart';
-import 'package:ottstudy/util/common.dart';
 
 import '../../../blocs/navigation_tab_cubit.dart';
+import '../../../data/models/course_model.dart';
+import '../../../data/models/user_model.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../res/colors.dart';
 import '../../../util/routes.dart';
+import '../../widget/base_progress_indicator.dart';
+import '../../widget/common_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => MyRegistrationCubit(),
+        ),
+        BlocProvider(
+          create: (_) => UserInfoCubit(),
+        )
+      ],
+      child: HomeBody(),
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+
+class HomeBody extends StatefulWidget {
+  const HomeBody({super.key});
+
+  @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    context.read<MyRegistrationCubit>().getMyRegistration({
+      'final_test_passed': 'false'
+    });
+    context.read<UserInfoCubit>().getUserInfo(null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
@@ -33,10 +73,20 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextLabel('Xin chào, Nguyễn Hữu Ngọc!', gradient: AppColors.base_gradient_4,
-                    fontWeight:
-                    FontWeight.bold, fontSize: 16,),
-                    CustomTextLabel('Bạn muốn học gì hôm nay?')
+                  BlocBuilder<UserInfoCubit, BaseState>(
+                    builder: (context, state) {
+                      if (state is LoadedState<UserModel>) {
+                        final UserModel model = state.data;
+                        return CustomTextLabel('Xin chào, ${model.fullName}', gradient: AppColors.base_gradient_4,
+                          fontWeight:
+                          FontWeight.bold, fontSize: 16,);
+                      }
+                      return const CustomTextLabel('Xin chào bạn nhỏ!', gradient: AppColors.base_gradient_4,
+                        fontWeight:
+                        FontWeight.bold, fontSize: 16,);
+                    },
+                  ),
+                    const CustomTextLabel('Bạn muốn học gì hôm nay?')
                 ],
               )
             ],
@@ -49,19 +99,62 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             explorerHomeCard(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Row(
               children: [
                 Expanded(child: notificationCard()),
                 Expanded(child: myCourseCard())
               ],
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  CustomTextLabel('Tiếp tục học', fontWeight: FontWeight.bold,),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: CustomTextLabel('Tiếp tục học', fontWeight: FontWeight.bold,)
+                  ),
+                  const SizedBox(height: 20,),
+                  SizedBox(
+                    height: 160,
+                    child: BlocBuilder<MyRegistrationCubit, BaseState>(
+                      builder: (context, state) {
+                        if (state is LoadingState) {
+                          return const Center(
+                            child: BaseProgressIndicator(color: AppColors.black,),
+                          );
+                        }
+                        if (state is LoadedState<List<CourseModel>>) {
+                          final List<CourseModel> courseList = state.data;
+                          if (courseList.isNotEmpty) {
+                            return ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: courseList.length,
+                              itemBuilder: (context, index) {
+                                final course = courseList[index];
+                                return CommonWidget.myCourseCard(
+                                  course,
+                                  width: 170,
+                                  onTap: () {
+                                    Navigator.pushNamed(context, Routes.courseInfoScreen, arguments: course);
+                                  },
+                                );
+                              },
+                              separatorBuilder: (context, index) => const SizedBox(width: 10),
+                            );
+                          } else {
+                            return const Center(
+                              child: CustomTextLabel('Chưa có khóa học nào'),
+                            );
+                          }
+                        }
+                        return const Center(
+                          child: CustomTextLabel('Đã có lỗi xảy ra'),
+                        );
+                      }
+                    ),
+                  )
                 ],
               ),
             )
@@ -102,34 +195,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Widget timeTodayCard() {
-  //   return GestureDetector(
-  //     onTap: () {
-  //
-  //     },
-  //     child: Container(
-  //       height: 120,
-  //       width: double.infinity,
-  //       padding: EdgeInsets.all(15),
-  //       margin: EdgeInsets.only(left: 20, right: 10),
-  //       decoration: BoxDecoration(
-  //         gradient: AppColors.base_gradient_2,
-  //         borderRadius: BorderRadius.circular(20.0),
-  //       ),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           // CustomTextLabel('Hôm nay,\nBạn đã học được', fontWeight: FontWeight.bold, color:
-  //           // AppColors.white, fontSize: 16),
-  //           // CustomTextLabel('1h25p', fontWeight: FontWeight.bold, color:
-  //           // AppColors.white, fontSize: 30,)
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget notificationCard() {
     return GestureDetector(
       onTap: () {
@@ -148,8 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CustomTextLabel('100th', fontWeight: FontWeight.bold, color:
-            AppColors.white, fontSize: 30,),
+            Assets.images.icChartWhite.image(scale: 2),
             CustomTextLabel('Thứ hạng của tôi', fontWeight: FontWeight.bold, color:
             AppColors.white, fontSize: 16,)
           ],

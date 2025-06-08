@@ -25,7 +25,7 @@ import '../ui/screen/course/course_info_screen.dart';
 import '../ui/screen/course/pdf_lesson_screen.dart';
 import '../ui/screen/exam/essay_screen.dart';
 import '../ui/screen/exam/quiz_screen.dart';
-import '../ui/screen/main_screen/chart_screen.dart';
+import '../ui/screen/main_screen/rank_screen.dart';
 import '../ui/screen/screen.dart';
 
 class Routes {
@@ -39,7 +39,7 @@ class Routes {
   static const String homeScreen = "/homeScreen";
   static const String explorerScreen = "/explorerScreen";
   static const String courseInfoScreen = "/courseInfoScreen";
-  static const String chartScreen = "/chartScreen";
+  static const String rankScreen = "/rankScreen";
   static const String videoLessonScreen = "/videoLessonScreen";
   static const String pdfLessonScreen = "/pdfLessonScreen";
   static const String quizScreen = "/quizScreen";
@@ -87,8 +87,8 @@ class Routes {
         return PageTransition(child: HomeScreen(), type: PageTransitionType.fade);
       case explorerScreen:
         return PageTransition(child: ExploreScreen(), type: PageTransitionType.fade);
-      case chartScreen:
-        return PageTransition(child: ChartScreen(), type: PageTransitionType.fade);
+      case rankScreen:
+        return PageTransition(child: RankScreen(), type: PageTransitionType.fade);
       case accountScreen:
         return PageTransition(child: AccountScreen(), type: PageTransitionType.fade);
       //Info

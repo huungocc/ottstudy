@@ -12,8 +12,9 @@ import '../../../data/models/user_model.dart';
 import '../../../res/colors.dart';
 import '../../../util/common.dart';
 import '../../../util/routes.dart';
-import '../../widget/base_loading.dart';
+import '../../widget/base_progress_indicator.dart';
 import '../../widget/base_screen.dart';
+import '../../widget/custom_dialog.dart';
 import '../../widget/custom_snack_bar.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -27,7 +28,6 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
-
 
 class AccountBody extends StatefulWidget {
   const AccountBody({super.key});
@@ -51,7 +51,6 @@ class _AccountBodyState extends State<AccountBody> {
     return BaseScreen(
       hideAppBar: true,
       colorBackground: AppColors.background_white,
-      loadingWidget: CustomLoading<UserInfoCubit>(),
       messageNotify: CustomSnackBar<UserInfoCubit>(),
       body: BlocConsumer<UserInfoCubit, BaseState>(
         listener: (context, state) {
@@ -64,48 +63,10 @@ class _AccountBodyState extends State<AccountBody> {
         },
         builder: (context, state) {
           return Container(
-            decoration: const BoxDecoration(
-                gradient: AppColors.base_gradient_1
-            ),
-            child:Column(
+            decoration: const BoxDecoration(gradient: AppColors.base_gradient_1),
+            child: Column(
               children: [
-                Column(
-                  children: [
-                    SizedBox(height: 50,),
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: ClipOval(
-                          child: BaseNetworkImage(
-                            url: imageUrl,
-                            width: 80,
-                            height: 80,
-                            boxFit: BoxFit.cover,
-                            borderRadius: 100,
-                            isFromDatabase: true,
-                            errorBuilder: Container(
-                              color: AppColors.gray,
-                              child: PhosphorIcon(
-                                size: 40,
-                                PhosphorIcons.user(),
-                                color: AppColors.white,
-                              ),
-                            ),
-                          )
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    CustomTextLabel(userModel?.fullName ?? 'Người dùng không xác định', fontWeight: FontWeight.w600,
-                      fontSize:
-                    16,
-                      color:
-                    AppColors
-                        .white,),
-                    const SizedBox(height: 5,),
-                    CustomTextLabel(userModel?.studentCode ?? 'Không xác định', color: AppColors.white,),
-                    const SizedBox(height: 20,),
-                  ],
-                ),
+                _buildUserInfoSection(state),
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
@@ -119,9 +80,16 @@ class _AccountBodyState extends State<AccountBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 10,),
-                        const CustomTextLabel('Cài đặt', fontWeight: FontWeight.bold,),
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const CustomTextLabel(
+                          'Cài đặt',
+                          fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         BaseButton(
                           borderRadius: 20,
                           backgroundColor: AppColors.white,
@@ -138,7 +106,9 @@ class _AccountBodyState extends State<AccountBody> {
                             Navigator.pushNamed(context, Routes.editAccountInfoScreen);
                           },
                         ),
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         BaseButton(
                           borderRadius: 20,
                           backgroundColor: AppColors.white,
@@ -155,9 +125,16 @@ class _AccountBodyState extends State<AccountBody> {
                             Navigator.pushNamed(context, Routes.changePasswordScreen);
                           },
                         ),
-                        const SizedBox(height: 40,),
-                        const CustomTextLabel('Công cụ', fontWeight: FontWeight.bold,),
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        const CustomTextLabel(
+                          'Công cụ',
+                          fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         BaseButton(
                           borderRadius: 20,
                           backgroundColor: AppColors.white,
@@ -174,7 +151,9 @@ class _AccountBodyState extends State<AccountBody> {
                             Common.showCalculator(context);
                           },
                         ),
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         BaseButton(
                           borderRadius: 20,
                           backgroundColor: AppColors.white,
@@ -208,12 +187,108 @@ class _AccountBodyState extends State<AccountBody> {
           backgroundColor: AppColors.white,
           borderRadius: 20,
           titleColor: AppColors.base_pink,
-          onTap: () async {
-            await SharedPreferenceUtil.clearData();
-            Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+          onTap: () {
+            _showLogoutDialog();
           },
         ),
       ),
+    );
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          content: const CustomTextLabel('Bạn có chắc muốn đăng xuất?', fontSize: 16,),
+          titleSubmit: 'OK',
+          onSubmit: () async {
+            await SharedPreferenceUtil.clearData();
+            Navigator.of(context).pop();
+            Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+          },
+          hasCloseButton: true,
+        );
+      },
+    );
+  }
+
+  Widget _buildUserInfoSection(BaseState state) {
+    return Column(
+      children: [
+        const SizedBox(height: 50),
+        if (state is LoadingState) ...[
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.gray.withOpacity(0.3),
+            ),
+            child: const Center(
+              child: BaseProgressIndicator(
+                color: AppColors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Loading cho tên
+          Container(
+            width: 150,
+            height: 20,
+            decoration: BoxDecoration(
+              color: AppColors.gray.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            width: 100,
+            height: 16,
+            decoration: BoxDecoration(
+              color: AppColors.gray.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ] else ...[
+          SizedBox(
+            width: 80,
+            height: 80,
+            child: ClipOval(
+              child: BaseNetworkImage(
+                url: imageUrl,
+                width: 80,
+                height: 80,
+                boxFit: BoxFit.cover,
+                borderRadius: 100,
+                isFromDatabase: true,
+                errorBuilder: Container(
+                  color: AppColors.gray,
+                  child: PhosphorIcon(
+                    size: 40,
+                    PhosphorIcons.user(),
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          CustomTextLabel(
+            userModel?.fullName ?? 'Người dùng không xác định',
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            color: AppColors.white,
+          ),
+          const SizedBox(height: 5),
+          CustomTextLabel(
+            userModel?.studentCode ?? 'Không xác định',
+            color: AppColors.white,
+          ),
+        ],
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -229,11 +304,17 @@ class _AccountBodyState extends State<AccountBody> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomTextLabel(title),
-          const SizedBox(height: 20,),
-          CustomTextLabel(value, fontSize: 30, fontWeight: FontWeight.bold, gradient: AppColors.base_gradient_1,)
+          const SizedBox(
+            height: 20,
+          ),
+          CustomTextLabel(
+            value,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            gradient: AppColors.base_gradient_1,
+          )
         ],
       ),
     );
   }
 }
-
