@@ -5,9 +5,9 @@ It helps them learn more effectively through video lessons, PDF materials, and i
 The app is built using **Flutter** for the frontend and **Dart Frog** for the backend, following **Clean Architecture** principles to ensure scalability and maintainability.
 
 <div style="display: flex; gap: 10px;">
-<img src="assets/screenshots/home.png" alt="Home Screen" width="250"/>  
-<img src="screenshots/course_detail.png" alt="Course Detail" width="250"/>  
-<img src="screenshots/quiz.png" alt="Quiz Screen" width="250"/>
+<img src="assets/images/screenshots/home.png" alt="Home Screen" width="250"/>  
+<img src="assets/images/screenshots/course_detail.png" alt="Course Detail" width="250"/>  
+<img src="assets/images/quiz.png" alt="Quiz Screen" width="250"/>
 </div>
 
 ---
