@@ -7,7 +7,7 @@ The app is built using **Flutter** for the frontend and **Dart Frog** for the ba
 <div style="display: flex; gap: 10px;">
 <img src="assets/images/screenshots/home.png" alt="Home Screen" width="250"/>  
 <img src="assets/images/screenshots/course_detail.png" alt="Course Detail" width="250"/>  
-<img src="assets/images/quiz.png" alt="Quiz Screen" width="250"/>
+<img src="assets/images/screenshots/quiz.png" alt="Quiz Screen" width="250"/>
 </div>
 
 ---
